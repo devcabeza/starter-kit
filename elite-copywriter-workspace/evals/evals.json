@@ -1,0 +1,59 @@
+{
+  "skill_name": "elite-copywriter",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Necesito que escribas el copy para mi hero section. Mi producto se llama LeadFlow, es un CRM automatizado para vendedores independientes. Mi cliente ideal es un vendedor que factura entre $3K-$10K al mes pero está estancado porque pasa más tiempo administrando leads que vendiendo. La solución automatiza el follow-up, califica leads con IA, y agenda reuniones directamente en el calendario del vendedor. El tono debe ser cercano y directo, como un colega que ya resolvió esto. El lector ya sabe que tiene el problema (pierde tiempo en tareas manuales) pero no conoce LeadFlow. Quiero headline + subheadline + 3 bullets de beneficio + CTA.",
+      "expected_output": "Complete hero section copy with headline, subheadline, 3 benefit bullets, and CTA. Should follow PAS or BAB formula, use active voice, specific numbers, and traction verbs in CTA.",
+      "files": [],
+      "expectations": [
+        "Output includes a diagnostic section with persuasive angle and formula used",
+        "Headline communicates a specific outcome (not generic 'improve your sales')",
+        "Subheadline expands the headline promise with concrete detail",
+        "All 3 bullets follow [Measurable outcome] + how it works format",
+        "CTA uses traction verb (Ver, Obtener, Calcular, Empezar, etc.) not passive labels",
+        "No corporate filler words ('soluciones integrales', 'innovación', 'sinergia')",
+        "Copy is in active voice and second person (tú/usted)",
+        "At least 3 A/B headline alternatives are provided",
+        "CRO justification explains word choice rationale",
+        "Specific numbers or concrete scenes replace vague adjectives"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Escribe una secuencia de 3 emails de nurture para mi curso 'Finanzas para Freelances'. El curso cuesta $247, tiene garantía de 30 días, y enseña a freelances a organizar sus finanzas, declarar impuestos correctamente, y crear un sistema de ahorro automático. El lector se descargó un ebook gratuito sobre '5 errores fiscales que todo freelance comete' — ya es consciente del problema pero aún no ha comprado. Tono: cercano pero profesional. Email 1: día del download. Email 2: 2 días después. Email 3: 5 días después con urgencia por precio de lanzamiento.",
+      "expected_output": "3 complete email sequences with subject lines, body copy, and CTAs. Each email should build on the previous, escalating urgency and social proof.",
+      "files": [],
+      "expectations": [
+        "Email 1 has a subject line under 50 characters with high open-rate formula",
+        "Email 1 body uses PAS framework (problem, agitation, solution)",
+        "Email 2 includes social proof (testimonial, case study, or metric)",
+        "Email 3 creates genuine urgency (deadline, limited spots, price increase)",
+        "All emails use active voice and second person",
+        "CTAs use traction verbs, not 'Haz clic aquí' o 'Comprar'",
+        "Emails have short paragraphs (max 3 lines) and line breaks for scannability",
+        "No corporate filler language throughout the sequence",
+        "Each email has a clear single CTA (not multiple competing actions)",
+        "Tone is consistent across all 3 emails (cercano but profesional)"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Audita y reescribe este copy de landing page que tengo actualmente: 'En TechSolutions, somos líderes en提供 soluciones integrales de automatización para empresas que buscan optimizar sus procesos. Nuestra plataforma innovadora utiliza tecnología de vanguardia para entregar resultados excepcionales. Con más de 10 años de experiencia, hemos ayudado a cientos de empresas a alcanzar sus objetivos. Contáctenos para una consulta gratuita y descubra cómo podemos transformar su negocio.' La empresa vende software de automatización de procesos para PyMEs en Latinoamérica. El cliente ideal es dueño de una PyME que sabe que sus procesos son ineficientes pero no sabe que existe una solución de software para ello (consciente del problema, inconsciente de la solución). Quiero copy reescrito con tono cercano y directo, y los 3 headlines alternativos para A/B testing.",
+      "expected_output": "Diagnóstico del copy actual (qué está mal), copy reescrito con estructura de componentes, 3 headlines alternativos, y justificación CRO.",
+      "files": [],
+      "expectations": [
+        "Diagnóstico identifies at least 3 specific problems in the original copy",
+        "Original copy contained 'soluciones integrales' and 'innovadora' — both are eliminated in rewrite",
+        "Rewritten headline uses specific outcome, not generic claims",
+        "Rewrite addresses the awareness level (problem-aware, solution-unaware)",
+        "Copy uses active voice and second person throughout",
+        "At least one bullet or sentence uses a specific number or concrete scene",
+        "3 headline alternatives are provided with clear labeling (benefit, pain, curiosity)",
+        "CRO justification references the reader's awareness level",
+        "No corporate filler remains in the rewritten version",
+        "CTA (if present) uses traction verb"
+      ]
+    }
+  ]
+}

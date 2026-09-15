@@ -1,0 +1,59 @@
+{
+  "skill_name": "landing-page-architect",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Necesito una landing page para mi SaaS. Se llama TaskFlow Pro, es una herramienta de gestión de proyectos para equipos de desarrollo de software. Los clientes son CTOs y engineering managers en empresas de 20-200 empleados que ya saben que necesitan mejorar sus procesos pero no conocen TaskFlow. El problema principal es que pierden 10+ horas por semana en reuniones de standup y status updates que podrían automatizarse. Las funciones principales son: reportes automáticos de progreso, integración con Slack y Jira, dashboard en tiempo real, y alertas inteligentes. La prueba gratis es de 14 días sin tarjeta de crédito. El CTA principal es 'Comenzar mi prueba gratis de 14 días'. No tengo logos de clientes aún pero tengo una métrica: 'Ahorra un promedio de 8 horas por semana por equipo'.",
+      "expected_output": "Complete Blade landing page template with: clear H1 about saving time, no navigation, trust microcopy near CTA, 3 benefits following Benefit > Feature formula, FAQ section with 3 questions, final CTA with guarantee clause",
+      "files": [],
+      "expectations": [
+        "Output is a valid Blade template with Tailwind CSS classes",
+        "H1 communicates the outcome (saving time/automating reports) in under 5 seconds",
+        "No navigation menu, no external links, no social media links present",
+        "CTA button uses active acquisition verb (e.g. 'Comenzar', 'Obtener', 'Empezar')",
+        "Trust microcopy appears near the CTA (mentioning no credit card, setup time, or cancellation)",
+        "At least 3 benefits follow the [Measurable outcome] + how feature achieves it format",
+        "FAQ section has exactly 3 questions covering price/value, complexity/time, and guarantee/risk",
+        "Final CTA section includes a guarantee clause",
+        "All features are translated to concrete outcomes (no raw feature lists)",
+        "Blade template uses x-app-layout component"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Quiero crear una página de ventas para mi curso online de DataBoost: Automatización con Python para Analistas de Datos. Va dirigido a analistas de datos que usan Excel todos los días y quieren aprender Python para automatizar sus reportes. Ya tienen consciencia del problema (saben que Excel los limita) pero no saben que Python puede resolverlo de forma fácil. El curso tiene 40 horas de video, 12 proyectos prácticos, acceso a comunidad privada, y certificado de finalización. Cuesta $199 USD y tiene garantía de devolución de 30 días. El CTA es 'Empezar mi camino en Python'. Quiero que la landing transmita que no necesitas saber programar para empezar.",
+      "expected_output": "Complete Blade landing page for an online course with: hero targeting Excel-to-Python transition, social proof section, 3 benefit blocks, persuasive FAQ, final CTA with 30-day guarantee",
+      "files": [],
+      "expectations": [
+        "Output is a valid Blade template with Tailwind CSS classes",
+        "H1 addresses the Excel-to-Python transition and the outcome (automation, time saved)",
+        "No navigation menu or external links present",
+        "Hero section explicitly addresses 'no programming experience needed' concern",
+        "CTA uses 'Empezar' or similar active verb matching the user's specification",
+        "3 benefits translate course features (40h video, 12 projects, community) into measurable outcomes",
+        "FAQ addresses: price justification ($199 vs value), learning curve (non-programmers), and 30-day guarantee",
+        "Guarantee clause appears both in FAQ and near final CTA",
+        "Trust microcopy near CTA mentions the 30-day guarantee",
+        "Copy tone is encouraging and addresses imposter syndrome for non-programmers"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Necesito una landing page para mi servicio de consultoría CloudShift. Ayudo a empresas mid-market (100-1000 empleados) a migrar de servidores on-premise a AWS. Mi cliente ideal es el CTO o Director de IT que sabe que necesita migrar pero tiene miedo de perder datos o tener downtime. El dolor principal es que tienen servidores viejos que fallan cada vez más y el costo de mantenimiento ya supera el costo de la nube. Mi proceso tiene 3 fases: auditoría gratuita de 30 min, plan de migración personalizado, y ejecución con cero downtime. El CTA es 'Agendar mi auditoría gratuita'. Tengo como prueba social que he migrado más de 50 empresas con 0 downtime registrado. Ofrezco garantía de 'Si hay downtime durante la migración, el mes de soporte es gratis'.",
+      "expected_output": "Complete Blade landing page for a B2B consulting service with: hero about cloud migration, social proof (50+ companies, 0 downtime), 3-phase process as benefits, FAQ addressing fear of migration, final CTA for free audit",
+      "files": [],
+      "expectations": [
+        "Output is a valid Blade template with Tailwind CSS classes",
+        "H1 addresses the migration outcome and eliminates fear (zero downtime promise)",
+        "No navigation menu or external links present",
+        "Social proof section highlights '50+ companies migrated with 0 downtime'",
+        "Benefits section presents the 3-phase process as transformation steps (not just features)",
+        "CTA uses 'Agendar' or similar verb matching the user's specification",
+        "FAQ addresses: why migrate now (cost of maintaining old servers), fear of downtime, and the guarantee policy",
+        "Guarantee clause explicitly states the 'free month of support if downtime occurs'",
+        "Trust microcopy near CTA reinforces zero-downtime promise",
+        "Copy addresses the emotional barrier (fear of migration) directly"
+      ]
+    }
+  ]
+}
