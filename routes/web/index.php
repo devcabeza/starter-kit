@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +15,17 @@ use Illuminate\Support\Facades\Route;
 
 // Public routes
 Route::view('/', 'welcome')->name('home');
+
+// Health check (used by Docker HEALTHCHECK)
+Route::get('/health', function () {
+    try {
+        DB::connection()->getPdo();
+
+        return response()->json(['status' => 'ok'], 200);
+    } catch (Exception $e) {
+        return response()->json(['status' => 'error', 'message' => 'Database unreachable'], 503);
+    }
+})->name('health');
 
 // Feature routes
 require __DIR__.'/auth.php';
