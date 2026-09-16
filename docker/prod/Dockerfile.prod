@@ -26,6 +26,7 @@ RUN composer install \
     --no-scripts \
     --no-autoloader \
     --prefer-dist \
+    --ignore-platform-req=ext-pcntl \
     && composer dump-autoload --optimize --no-dev
 
 
