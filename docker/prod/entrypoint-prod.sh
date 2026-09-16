@@ -3,6 +3,12 @@ set -e
 
 echo "🚀 Starting Laravel production..."
 
+# Ensure cache directories exist (safety net for .dockerignore exclusions)
+mkdir -p storage/framework/{sessions,views,cache}
+mkdir -p bootstrap/cache
+chown -R app:app storage bootstrap/cache
+chmod -R 775 storage bootstrap/cache
+
 # Run Migrations
 php artisan migrate --force
 

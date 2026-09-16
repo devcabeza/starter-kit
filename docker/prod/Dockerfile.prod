@@ -98,12 +98,6 @@ RUN groupadd -g 1000 -r app && useradd -g 1000 -r -s /bin/false app
 
 WORKDIR /var/www/html
 
-# Create storage directories with proper ownership
-RUN mkdir -p storage/framework/{sessions,views,cache} \
-    bootstrap/cache \
-    && chown -R app:app storage bootstrap/cache \
-    && chmod -R 775 storage bootstrap/cache
-
 # Composer dependencies (from deps stage)
 COPY --from=deps /app/vendor vendor/
 COPY --from=deps /app/composer.json composer.json
@@ -121,8 +115,10 @@ COPY artisan artisan
 # Copy built frontend assets
 COPY --from=frontend /app/public/build/ public/build/
 
-# Fix ownership
-RUN chown -R app:app /var/www/html \
+# Recreate storage/cache directories (excluded by .dockerignore)
+RUN mkdir -p storage/framework/{sessions,views,cache} \
+    bootstrap/cache \
+    && chown -R app:app /var/www/html \
     && chmod -R 775 storage bootstrap/cache
 
 # Entrypoint
