@@ -85,11 +85,7 @@ RUN sed -i 's/^user = www-data/user = app/' /usr/local/etc/php-fpm.d/www.conf \
     && sed -i 's/^group = www-data/group = app/' /usr/local/etc/php-fpm.d/www.conf
 
 # Override zz-docker.conf to listen on unix socket (this file overrides www.conf)
-RUN echo "[www]
-listen = /var/run/php/php8.4-fpm.sock
-listen.owner = app
-listen.group = app
-" > /usr/local/etc/php-fpm.d/zz-docker.conf
+RUN printf '[www]\nlisten = /var/run/php/php8.4-fpm.sock\nlisten.owner = app\nlisten.group = app\n' > /usr/local/etc/php-fpm.d/zz-docker.conf
 
 # Nginx configuration
 RUN rm /etc/nginx/sites-enabled/default
