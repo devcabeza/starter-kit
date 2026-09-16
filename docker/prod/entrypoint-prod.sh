@@ -9,6 +9,10 @@ mkdir -p bootstrap/cache
 chown -R app:app storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
 
+# Ensure php-fpm run directory has correct ownership (safety net)
+mkdir -p /var/run/php
+chown app:app /var/run/php
+
 # Run Migrations
 php artisan migrate --force
 

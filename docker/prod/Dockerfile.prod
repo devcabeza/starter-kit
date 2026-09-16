@@ -85,8 +85,7 @@ RUN sed -i 's/^user = www-data/user = app/' /usr/local/etc/php-fpm.d/www.conf \
     && sed -i 's/^group = www-data/group = app/' /usr/local/etc/php-fpm.d/www.conf \
     && sed -i 's/^listen = 127.0.0.1:9000/listen = \/var\/run\/php\/php8.4-fpm.sock/' /usr/local/etc/php-fpm.d/www.conf \
     && sed -i 's/^;listen.owner = www-data/listen.owner = app/' /usr/local/etc/php-fpm.d/www.conf \
-    && sed -i 's/^;listen.group = www-data/listen.group = app/' /usr/local/etc/php-fpm.d/www.conf \
-    && mkdir -p /var/run/php
+    && sed -i 's/^;listen.group = www-data/listen.group = app/' /usr/local/etc/php-fpm.d/www.conf
 
 # Nginx configuration
 RUN rm /etc/nginx/sites-enabled/default
@@ -95,6 +94,9 @@ RUN ln -s /etc/nginx/sites-available/laravel.conf /etc/nginx/sites-enabled/larav
 
 # Non-root user for app files
 RUN groupadd -g 1000 -r app && useradd -g 1000 -r -s /bin/false app
+
+# Create php-fpm run directory with correct ownership
+RUN mkdir -p /var/run/php && chown app:app /var/run/php
 
 WORKDIR /var/www/html
 
