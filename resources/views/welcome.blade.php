@@ -3,7 +3,7 @@
     <head>
         <meta charset='utf-8'>
         <meta name='viewport' content='width=device-width, initial-scale=1'>
-        <title>{{config('app.name')}}</title>
+        <title>Laravertex</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -16,7 +16,7 @@
     <body class='antialiased font-sans'>
         <main class='flex justify-center items-center h-screen w-screen flex-col'>
             <img src="{{asset('favicon.svg')}}" class='w-[5rem] h-[5rem]' />
-            <h1 class='text-6xl font-bold'>{{config('app.name')}}</h1>
+            <h1 class='text-6xl font-bold'>Laravertex</h1>
             <span>Bienvenido, crea y prueba rapido, distribuye y gana de inmediato</span>
         </main>
     </body>
