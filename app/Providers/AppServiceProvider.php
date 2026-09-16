@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Mail\SendrixTransport;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -24,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureMailTransport();
     }
 
     /**
@@ -46,5 +49,19 @@ class AppServiceProvider extends ServiceProvider
                 ->uncompromised()
             : null,
         );
+    }
+
+    /**
+     * Register the Sendrix mail transport.
+     */
+    protected function configureMailTransport(): void
+    {
+        Mail::extend('sendrix', function () {
+            return new SendrixTransport(
+                apiKey: config('services.sendrix.api_key'),
+                projectId: config('services.sendrix.project_id'),
+                baseUrl: config('services.sendrix.base_url'),
+            );
+        });
     }
 }

@@ -22,6 +22,12 @@ return [
         'key' => env('RESEND_API_KEY'),
     ],
 
+    'sendrix' => [
+        'base_url' => env('SENDRIX_BASE_URL'),
+        'api_key' => env('SENDRIX_API_KEY'),
+        'project_id' => env('SENDRIX_PROJECT_ID'),
+    ],
+
     'ses' => [
         'key' => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
