@@ -94,6 +94,8 @@ RUN ln -s /etc/nginx/sites-available/laravel.conf /etc/nginx/sites-enabled/larav
 
 # Non-root user for app files
 RUN groupadd -g 1000 -r app && useradd -g 1000 -r -s /bin/false app
+# Make nginx run as app user (so it can access php-fpm unix socket)
+RUN sed -i "s/^user www-data/user app/" /etc/nginx/nginx.conf
 
 # Create php-fpm run directory with correct ownership
 RUN mkdir -p /var/run/php && chown app:app /var/run/php
