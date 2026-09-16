@@ -37,9 +37,9 @@ FROM php:8.4-fpm-bookworm
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
        curl gnupg2 ca-certificates lsb-release \
-    && curl -fsSL https://unit.nginx.org/unit-xenial.gpg \
-       | gpg --dearmor -o /usr/share/keyrings/nginx-unit-archive-keyring.gpg \
-    && echo "deb [signed-by=/usr/share/keyrings/nginx-unit-archive-keyring.gpg] \
+    && curl -fsSL https://unit.nginx.org/keys/nginx-keyring.gpg \
+       | gpg --dearmor -o /usr/share/keyrings/nginx-keyring.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/nginx-keyring.gpg] \
        https://packages.nginx.org/unit/debian/ bookworm unit" \
        > /etc/apt/sources.list.d/unit.list \
     && apt-get update \
