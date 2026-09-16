@@ -80,12 +80,16 @@ memory_limit=512M\n\
 upload_max_filesize=64M\n\
 post_max_size=64M" > /usr/local/etc/php/conf.d/laravel-production.ini
 
-# Configure php-fpm to run as app user and listen on unix socket
+# Configure php-fpm to run as app user
 RUN sed -i 's/^user = www-data/user = app/' /usr/local/etc/php-fpm.d/www.conf \
-    && sed -i 's/^group = www-data/group = app/' /usr/local/etc/php-fpm.d/www.conf \
-    && sed -i 's/^listen = 127.0.0.1:9000/listen = \/var\/run\/php\/php8.4-fpm.sock/' /usr/local/etc/php-fpm.d/www.conf \
-    && sed -i 's/^;listen.owner = www-data/listen.owner = app/' /usr/local/etc/php-fpm.d/www.conf \
-    && sed -i 's/^;listen.group = www-data/listen.group = app/' /usr/local/etc/php-fpm.d/www.conf
+    && sed -i 's/^group = www-data/group = app/' /usr/local/etc/php-fpm.d/www.conf
+
+# Override zz-docker.conf to listen on unix socket (this file overrides www.conf)
+RUN echo "[www]
+listen = /var/run/php/php8.4-fpm.sock
+listen.owner = app
+listen.group = app
+" > /usr/local/etc/php-fpm.d/zz-docker.conf
 
 # Nginx configuration
 RUN rm /etc/nginx/sites-enabled/default
