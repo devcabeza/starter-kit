@@ -13,6 +13,15 @@ chmod -R 775 storage bootstrap/cache
 mkdir -p /var/run/php
 chown app:app /var/run/php
 
+# Fix APP_URL scheme: force https when behind reverse proxy
+# Coolify auto-generates APP_URL with http:// but the actual traffic is https://
+if [ -n "$APP_URL" ]; then
+    if [[ "$APP_URL" == http://* ]]; then
+        export APP_URL="${APP_URL/http:\/\//https://}"
+        echo "⚠️  APP_URL was http://, corrected to: $APP_URL"
+    fi
+fi
+
 # Run Migrations
 php artisan migrate --force
 
