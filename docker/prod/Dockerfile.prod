@@ -27,7 +27,7 @@ RUN composer install \
     --no-autoloader \
     --prefer-dist \
     --ignore-platform-req=ext-pcntl \
-    && composer dump-autoload --optimize --no-dev
+    && composer dump-autoload --optimize --no-dev --no-scripts
 
 
 # --- Stage 3: Final production image (Nginx Unit) ---
