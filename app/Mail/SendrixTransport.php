@@ -3,11 +3,12 @@
 namespace App\Mail;
 
 use Illuminate\Support\Facades\Http;
+use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mailer\SentMessage;
 use Symfony\Component\Mailer\Transport\TransportInterface;
-use Symfony\Mime\Address;
-use Symfony\Mime\Email;
-use Symfony\Mime\RawMessage;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\RawMessage;
 
 class SendrixTransport implements TransportInterface
 {
@@ -17,11 +18,11 @@ class SendrixTransport implements TransportInterface
         private readonly string $baseUrl,
     ) {}
 
-    public function send(RawMessage $message, ?SentMessage $sentMessage = null): SentMessage
+    public function send(RawMessage $message, ?Envelope $envelope = null): ?SentMessage
     {
         $email = $message instanceof Email
             ? $message
-            : $message->getOriginalMessage();
+            : new Email;
 
         $html = $email->getHtmlBody() ?? $email->getTextBody() ?? '';
 
@@ -64,7 +65,12 @@ class SendrixTransport implements TransportInterface
             throw new \RuntimeException("Sendrix error: {$error}", $response->status());
         }
 
-        return $sentMessage ?? new SentMessage($message);
+        $sentEnvelope = $envelope ?? new Envelope(
+            sender: $from !== [] ? $from[0] : new Address('sender@example.com'),
+            recipients: $email->getTo(),
+        );
+
+        return new SentMessage($message, $sentEnvelope);
     }
 
     public function __toString(): string
