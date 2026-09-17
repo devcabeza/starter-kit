@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  ANDROID_PACKAGE_NAME: laravertex
+  ANDROID_PACKAGE_NAME: com.laravertex.app
   APP_NAME: Laravertex
 
 jobs:
