@@ -96,12 +96,15 @@ Background jobs must **never** run in the web container. A separate worker servi
 - **Source**: Same Git repository and branch (`main` for prod, `staging` for staging).
 - **Build Pack**: `Dockerfile` pointing to the same Dockerfile (`docker/prod/Dockerfile.prod` or `docker/staging/Dockerfile.staging`).
 - **Domains & Ports**: **Do not assign any domain or expose any public ports**.
-- **Custom Docker Run / Start Command**:
-  ```bash
-  php artisan horizon
-  ```
+- **Role Activation in Coolify**:
+  In Coolify, when the build pack is `Dockerfile`, the UI hides the "Start Command" field and only shows "Custom Docker Options". To tell the container to run as a worker:
+  - Add the environment variable in the Worker's **Environment Variables** tab:
+    ```ini
+    CONTAINER_ROLE=worker
+    ```
+    *(Alternatively `CONTAINER_ROLE=horizon`)*
 - **Why this works**:
-  The entrypoint script inspects `$@`. When a custom command is detected, it skips Nginx and PHP-FPM and executes `exec "$@"`. This runs Horizon as PID 1, allowing proper propagation of `SIGTERM` signals for graceful worker termination during redeployments.
+  The entrypoint script inspects `$CONTAINER_ROLE` and `$@`. When `CONTAINER_ROLE=worker` (or a custom command) is detected, it skips Nginx and PHP-FPM and executes `exec php artisan horizon`. This runs Horizon as PID 1, allowing proper propagation of `SIGTERM` signals for graceful worker termination during redeployments.
 - **Restart Policy**: `always` or `unless-stopped`.
 
 ---

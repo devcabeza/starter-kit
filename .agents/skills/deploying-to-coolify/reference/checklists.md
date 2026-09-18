@@ -32,7 +32,7 @@ Copy and track progress during initial rollout:
 - [ ] 8. Production Worker created:
   - [ ] Branch: `main`
   - [ ] Dockerfile path: `docker/prod/Dockerfile.prod`
-  - [ ] Custom start command: `php artisan horizon`
+  - [ ] Role activation: Add `CONTAINER_ROLE=worker` to Environment Variables
   - [ ] NO public domain / ports assigned
   - [ ] Identical DB and Redis environment variables copied
 - [ ] 9. Deploy Worker & verify Horizon dashboard or logs
@@ -66,7 +66,8 @@ Copy and track progress during initial rollout:
 - [ ] 8. Staging Worker created:
   - [ ] Branch: `staging`
   - [ ] Dockerfile path: `docker/staging/Dockerfile.staging`
-  - [ ] Custom start command: `php artisan horizon`
+  - [ ] Role activation: Add `CONTAINER_ROLE=worker` to Environment Variables
+  - [ ] NO public domain / ports assigned
 - [ ] 9. Deploy Worker & test background jobs
 ```
 
