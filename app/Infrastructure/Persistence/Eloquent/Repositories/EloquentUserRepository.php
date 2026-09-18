@@ -43,6 +43,37 @@ final class EloquentUserRepository implements UserRepositoryInterface
             ->update(['email_verified_at' => now()]);
     }
 
+    public function emailExistsExceptUser(string $email, int|string $exceptUserId): bool
+    {
+        return EloquentUser::where('email', strtolower(trim($email)))
+            ->where('id', '!=', $exceptUserId)
+            ->exists();
+    }
+
+    public function updateProfile(int|string $id, string $name, string $email): DomainUser
+    {
+        $user = EloquentUser::findOrFail($id);
+        $normalizedEmail = strtolower(trim($email));
+
+        $attributes = [
+            'name' => trim($name),
+            'email' => $normalizedEmail,
+        ];
+
+        if ($user->email !== $normalizedEmail) {
+            $attributes['email_verified_at'] = null;
+        }
+
+        $user->update($attributes);
+
+        return $this->toDomain($user);
+    }
+
+    public function delete(int|string $id): void
+    {
+        EloquentUser::where('id', $id)->delete();
+    }
+
     private function toDomain(EloquentUser $model): DomainUser
     {
         return new DomainUser(
