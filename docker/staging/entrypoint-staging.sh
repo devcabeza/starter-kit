@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Starting Laravel production..."
+echo "🚀 Starting Laravel staging..."
 
 # Ensure cache directories exist (safety net for .dockerignore exclusions)
 mkdir -p storage/framework/{sessions,views,cache}
@@ -32,7 +32,7 @@ fi
 # Run Migrations (only web app handles migrations)
 php artisan migrate --force
 
-# Cache Laravel optimizations
+# Cache Laravel optimizations for staging
 php artisan config:cache --no-interaction
 php artisan route:cache --no-interaction
 php artisan view:cache --no-interaction
@@ -45,11 +45,10 @@ php artisan storage:link --force 2>/dev/null || true
 chown -R app:app /var/www/html/storage /var/www/html/bootstrap/cache 2>/dev/null || true
 chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache 2>/dev/null || true
 
-echo "✅ Laravel ready. Starting nginx + php-fpm..."
+echo "✅ Laravel staging ready. Starting nginx + php-fpm..."
 
 # Start php-fpm in background
 php-fpm -D
 
 # Start nginx in foreground (this keeps the container running)
 exec nginx -g "daemon off;"
-
