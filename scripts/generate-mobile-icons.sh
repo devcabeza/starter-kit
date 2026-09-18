@@ -86,9 +86,8 @@ for dir in "${!ICON_SIZES[@]}"; do
     $CONVERT "$SOURCE_LOGO" -resize 72x72 -extent 108x108 -gravity center "$RES_DIR/$dir/ic_launcher_foreground.png"
 done
 
-# Also copy to drawable directories
+# Copy to drawable directory only (not drawable-v24 to avoid XML conflict)
 $CONVERT "$SOURCE_LOGO" -resize 72x72 -extent 108x108 -gravity center "$RES_DIR/drawable/ic_launcher_foreground.png"
-cp "$RES_DIR/drawable/ic_launcher_foreground.png" "$RES_DIR/drawable-v24/ic_launcher_foreground.png" 2>/dev/null || true
 
 # ============================================================================
 # Generate splash screen (white background, centered logo)
