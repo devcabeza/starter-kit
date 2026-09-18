@@ -2,7 +2,13 @@
 
 namespace App\Providers;
 
+use App\Infrastructure\Messaging\MagicLinkNotifier;
+use App\Infrastructure\Persistence\Eloquent\Repositories\EloquentMagicLinkTokenRepository;
+use App\Infrastructure\Persistence\Eloquent\Repositories\EloquentUserRepository;
 use App\Mail\SendrixTransport;
+use App\Ports\Out\Messaging\MagicLinkNotifierInterface;
+use App\Ports\Out\Persistence\MagicLinkTokenRepositoryInterface;
+use App\Ports\Out\Persistence\UserRepositoryInterface;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +23,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(
+            UserRepositoryInterface::class,
+            EloquentUserRepository::class,
+        );
+
+        $this->app->bind(
+            MagicLinkTokenRepositoryInterface::class,
+            EloquentMagicLinkTokenRepository::class,
+        );
+
+        $this->app->bind(
+            MagicLinkNotifierInterface::class,
+            MagicLinkNotifier::class,
+        );
     }
 
     /**

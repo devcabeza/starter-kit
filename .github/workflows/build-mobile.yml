@@ -1,16 +1,13 @@
 name: Build Mobile App
 
 on:
-  push:
-    branches:
-      - main
-    tags:
-      - 'v*.*.*'
   pull_request:
     branches:
       - main
     types:
       - closed
+    tags:
+      - 'v*.*.*'
   workflow_dispatch:
 
 permissions:
