@@ -35,6 +35,7 @@
         "lightningcss-linux-x64-gnu": "^1.29.1"
     },
     "devDependencies": {
+        "daisyui": "^5.7.42",
         "typescript": "^5.9.3"
     }
 }
