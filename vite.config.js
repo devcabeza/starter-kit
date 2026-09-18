@@ -17,7 +17,7 @@ export default defineConfig({
         tailwindcss(),
     ]),
     build: {
-        outDir: 'public/build',
+        outDir: 'dist',
         emptyOutDir: true,
     },
     server: {
