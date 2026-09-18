@@ -117,7 +117,7 @@ COPY routes/ routes/
 COPY artisan artisan
 
 # Copy built frontend assets
-COPY --from=frontend /app/public/build/ public/build/
+COPY --from=frontend /app/dist/ public/build/
 
 # Recreate storage/cache directories (excluded by .dockerignore)
 RUN mkdir -p storage/framework/{sessions,views,cache} \
