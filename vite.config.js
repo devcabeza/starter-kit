@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import tailwindcss from '@tailwindcss/vite';
 import laravel from 'laravel-vite-plugin';
 import { bunny } from 'laravel-vite-plugin/fonts';
@@ -15,6 +16,14 @@ export default defineConfig({
             ],
         }),
         tailwindcss(),
+        {
+            name: 'sync-public-build',
+            closeBundle() {
+                if (fs.existsSync('dist')) {
+                    fs.cpSync('dist', 'public/build', { recursive: true });
+                }
+            },
+        },
     ]),
     build: {
         outDir: 'dist',
