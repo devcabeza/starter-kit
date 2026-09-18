@@ -5,14 +5,14 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite dev",
-        "cap:sync": "npx cap sync",
+        "cap:sync": "npm run cap:icons && npx cap sync",
         "cap:init": "npx cap init Laravertex com.laravertex.app --web-dir=dist",
-        "cap:add:android": "npm install @capacitor/android && npx cap add android",
-        "cap:add:ios": "npm install @capacitor/ios && npx cap add ios",
+        "cap:add:android": "npm install @capacitor/android && npx cap add android && npm run cap:icons",
+        "cap:add:ios": "npm install @capacitor/ios && npx cap add ios && npm run cap:icons",
         "cap:open:android": "npx cap open android",
         "cap:open:ios": "npx cap open ios",
         "cap:icons": "./scripts/generate-mobile-icons.sh",
-        "build:android": "npm run build && npx cap sync android && cd android && ./gradlew assembleDebug",
+        "build:android": "npm run build && npm run cap:icons && npx cap sync android && cd android && ./gradlew assembleDebug",
         "postinstall": "echo 'Run npm run cap:icons to generate mobile app icons'"
     },
     "dependencies": {
