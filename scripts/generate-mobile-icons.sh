@@ -3,12 +3,12 @@
 # ============================================================================
 # generate-mobile-icons.sh
 # 
-# Generates Android app icons and splash screen from logo-mobil.png
+# Generates Android app icons and splash screen from public/mobile-icons/logo.png
 # This script is part of the starter-kit and should be run after setting up
 # a new project to ensure the mobile app has the correct branding.
 #
 # Usage: ./scripts/generate-mobile-icons.sh [path-to-logo]
-# Default: uses public/logo-mobil.png
+# Default: uses public/mobile-icons/logo.png
 # ============================================================================
 
 set -e
@@ -23,14 +23,16 @@ NC='\033[0m' # No Color
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
-# Source logo (default to public/logo-mobil.png)
-SOURCE_LOGO="${1:-$PROJECT_ROOT/public/logo-mobil.png}"
+# Source logo (default to public/mobile-icons/logo.png)
+SOURCE_LOGO="${1:-$PROJECT_ROOT/public/mobile-icons/logo.png}"
 RES_DIR="$PROJECT_ROOT/android/app/src/main/res"
 
 # Check if source logo exists
 if [ ! -f "$SOURCE_LOGO" ]; then
     echo -e "${RED}Error: Logo file not found at $SOURCE_LOGO${NC}"
     echo "Usage: $0 [path-to-logo.png]"
+    echo ""
+    echo "Expected location: public/mobile-icons/logo.png"
     exit 1
 fi
 
@@ -84,9 +86,8 @@ for dir in "${!ICON_SIZES[@]}"; do
     $CONVERT "$SOURCE_LOGO" -resize 72x72 -extent 108x108 -gravity center "$RES_DIR/$dir/ic_launcher_foreground.png"
 done
 
-# Also copy to drawable directories
+# Copy to drawable directory only (not drawable-v24 to avoid XML conflict)
 $CONVERT "$SOURCE_LOGO" -resize 72x72 -extent 108x108 -gravity center "$RES_DIR/drawable/ic_launcher_foreground.png"
-cp "$RES_DIR/drawable/ic_launcher_foreground.png" "$RES_DIR/drawable-v24/ic_launcher_foreground.png" 2>/dev/null || true
 
 # ============================================================================
 # Generate splash screen (white background, centered logo)
