@@ -22,6 +22,19 @@ if [ -n "$APP_URL" ]; then
     fi
 fi
 
+# Check if container role is worker/horizon via environment variable (Coolify Dockerfile support)
+if [ "$CONTAINER_ROLE" = "worker" ] || [ "$CONTAINER_ROLE" = "horizon" ]; then
+    echo "⚡ Worker role detected via CONTAINER_ROLE: $CONTAINER_ROLE"
+    echo "🚀 Starting Horizon as PID 1..."
+    exec php artisan horizon
+fi
+
+if [ -n "$CUSTOM_COMMAND" ]; then
+    echo "⚡ Custom command detected via CUSTOM_COMMAND: $CUSTOM_COMMAND"
+    echo "🚀 Starting process as PID 1..."
+    exec $CUSTOM_COMMAND
+fi
+
 # Check if a custom command was passed (e.g. php artisan horizon)
 if [ $# -gt 0 ] && [ "$1" != "nginx" ]; then
     echo "⚡ Custom command detected: $@"
