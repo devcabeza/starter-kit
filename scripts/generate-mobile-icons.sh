@@ -3,12 +3,15 @@
 # ============================================================================
 # generate-mobile-icons.sh
 # 
-# Generates Android app icons and splash screen from public/mobile-icons/logo.png
-# This script is part of the starter-kit and should be run after setting up
-# a new project to ensure the mobile app has the correct branding.
+# Generates Android (and iOS) app icons and splash screens from a brand logo.
+# Part of the starter-kit: ensures every new project has proper branding
+# without any leftover Capacitor default assets.
 #
-# Usage: ./scripts/generate-mobile-icons.sh [path-to-logo]
-# Default: uses public/mobile-icons/logo.png
+# Usage: ./scripts/generate-mobile-icons.sh [path-to-logo] [bg-color] [splash-bg-color]
+# Defaults:
+#   Logo: public/mobile-icons/logo.png (or public/logo.png, public/favicon.svg)
+#   Icon BG: #ffffff (or CAPACITOR_ICON_BG_COLOR from .env)
+#   Splash BG: #ffffff (or CAPACITOR_SPLASH_BG_COLOR from .env)
 # ============================================================================
 
 set -e
@@ -17,101 +20,237 @@ set -e
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Script directory
+# Script directory and project root
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
-# Source logo (default to public/mobile-icons/logo.png)
-SOURCE_LOGO="${1:-$PROJECT_ROOT/public/mobile-icons/logo.png}"
-RES_DIR="$PROJECT_ROOT/android/app/src/main/res"
+# Load .env if present
+if [ -f "$PROJECT_ROOT/.env" ]; then
+    ENV_ICON_BG=$(grep -E '^CAPACITOR_ICON_BG_COLOR=' "$PROJECT_ROOT/.env" | cut -d '=' -f2- | tr -d '"' | tr -d "'" || true)
+    ENV_SPLASH_BG=$(grep -E '^CAPACITOR_SPLASH_BG_COLOR=' "$PROJECT_ROOT/.env" | cut -d '=' -f2- | tr -d '"' | tr -d "'" || true)
+fi
 
-# Check if source logo exists
-if [ ! -f "$SOURCE_LOGO" ]; then
-    echo -e "${RED}Error: Logo file not found at $SOURCE_LOGO${NC}"
-    echo "Usage: $0 [path-to-logo.png]"
-    echo ""
-    echo "Expected location: public/mobile-icons/logo.png"
+# Detect source logo
+SOURCE_LOGO="$1"
+if [ -z "$SOURCE_LOGO" ]; then
+    if [ -f "$PROJECT_ROOT/public/mobile-icons/logo.png" ]; then
+        SOURCE_LOGO="$PROJECT_ROOT/public/mobile-icons/logo.png"
+    elif [ -f "$PROJECT_ROOT/public/logo.png" ]; then
+        SOURCE_LOGO="$PROJECT_ROOT/public/logo.png"
+    elif [ -f "$PROJECT_ROOT/public/apple-touch-icon.png" ]; then
+        SOURCE_LOGO="$PROJECT_ROOT/public/apple-touch-icon.png"
+    elif [ -f "$PROJECT_ROOT/public/favicon.svg" ]; then
+        SOURCE_LOGO="$PROJECT_ROOT/public/favicon.svg"
+    fi
+fi
+
+if [ -z "$SOURCE_LOGO" ] || [ ! -f "$SOURCE_LOGO" ]; then
+    echo -e "${RED}Error: Source logo not found.${NC}"
+    echo "Please place your logo at public/mobile-icons/logo.png or provide path:"
+    echo "  $0 [path-to-logo.png]"
     exit 1
 fi
 
-# Check if ImageMagick is installed
-if ! command -v convert &> /dev/null && ! command -v magick &> /dev/null; then
+# Background colors
+ICON_BG_COLOR="${2:-${ENV_ICON_BG:-#ffffff}}"
+SPLASH_BG_COLOR="${3:-${ENV_SPLASH_BG:-#ffffff}}"
+
+# Check ImageMagick
+if command -v magick &> /dev/null; then
+    CONVERT="magick"
+elif command -v convert &> /dev/null; then
+    CONVERT="convert"
+else
     echo -e "${RED}Error: ImageMagick is not installed.${NC}"
     echo "Install it with:"
-    echo "  Ubuntu/Debian: sudo apt-get install imagemagick"
+    echo "  Ubuntu/Debian: sudo apt-get install -y imagemagick"
     echo "  macOS: brew install imagemagick"
     exit 1
 fi
 
-# Use magick if available, otherwise use convert
-if command -v magick &> /dev/null; then
-    CONVERT="magick"
+echo -e "${BLUE}====================================================${NC}"
+echo -e "${YELLOW}🎬 Mobile Assets Generator (Starter Kit)${NC}"
+echo -e "${BLUE}====================================================${NC}"
+echo -e "  • Logo:        $SOURCE_LOGO"
+echo -e "  • Icon BG:     $ICON_BG_COLOR"
+echo -e "  • Splash BG:   $SPLASH_BG_COLOR"
+echo ""
+
+# Handle SVG conversion if input is SVG
+TEMP_PNG=""
+if [[ "$SOURCE_LOGO" == *.svg ]]; then
+    TEMP_PNG=$(mktemp --suffix=.png)
+    echo -e "${YELLOW}Converting SVG logo to high-res PNG...${NC}"
+    $CONVERT -background none -density 300 "$SOURCE_LOGO" -resize 1024x1024 "$TEMP_PNG"
+    WORKING_LOGO="$TEMP_PNG"
 else
-    CONVERT="convert"
+    WORKING_LOGO="$SOURCE_LOGO"
 fi
 
-echo -e "${YELLOW}🎬 Generating mobile icons from: $SOURCE_LOGO${NC}"
+cleanup() {
+    if [ -n "$TEMP_PNG" ] && [ -f "$TEMP_PNG" ]; then
+        rm -f "$TEMP_PNG"
+    fi
+}
+trap cleanup EXIT
+
+# ============================================================================
+# ANDROID ASSETS
+# ============================================================================
+ANDROID_RES="$PROJECT_ROOT/android/app/src/main/res"
+
+if [ -d "$ANDROID_RES" ]; then
+    echo -e "${GREEN}📱 Generating Android Assets...${NC}"
+
+    # 1. Clean up default Capacitor vector drawables that override custom icons on API 24+
+    echo "  → Removing default Capacitor vector drawables..."
+    rm -f "$ANDROID_RES/drawable-v24/ic_launcher_foreground.xml"
+    rm -f "$ANDROID_RES/drawable-v24/ic_launcher_foreground.png"
+    rm -f "$ANDROID_RES/drawable/ic_launcher_foreground.png"
+    rm -f "$ANDROID_RES/drawable/ic_launcher_background.xml"
+
+    # 2. Configure adaptive icon background color in values/ic_launcher_background.xml
+    mkdir -p "$ANDROID_RES/values"
+    cat <<EOF > "$ANDROID_RES/values/ic_launcher_background.xml"
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ic_launcher_background">${ICON_BG_COLOR}</color>
+</resources>
+EOF
+    echo "  → Configured values/ic_launcher_background.xml ($ICON_BG_COLOR)"
+
+    # 3. Configure adaptive icon definitions (API 26+)
+    mkdir -p "$ANDROID_RES/mipmap-anydpi-v26"
+    cat <<EOF > "$ANDROID_RES/mipmap-anydpi-v26/ic_launcher.xml"
+<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/ic_launcher_background"/>
+    <foreground android:drawable="@mipmap/ic_launcher_foreground"/>
+</adaptive-icon>
+EOF
+
+    cat <<EOF > "$ANDROID_RES/mipmap-anydpi-v26/ic_launcher_round.xml"
+<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/ic_launcher_background"/>
+    <foreground android:drawable="@mipmap/ic_launcher_foreground"/>
+</adaptive-icon>
+EOF
+    echo "  → Configured mipmap-anydpi-v26/ic_launcher.xml and ic_launcher_round.xml"
+
+    # 4. Generate legacy launcher icons (API < 26)
+    declare -A LEGACY_SIZES=(
+        ["mipmap-mdpi"]=48
+        ["mipmap-hdpi"]=72
+        ["mipmap-xhdpi"]=96
+        ["mipmap-xxhdpi"]=144
+        ["mipmap-xxxhdpi"]=192
+    )
+
+    for dir in "${!LEGACY_SIZES[@]}"; do
+        size="${LEGACY_SIZES[$dir]}"
+        mkdir -p "$ANDROID_RES/$dir"
+        echo "  → $dir legacy icons: ${size}x${size}"
+        $CONVERT "$WORKING_LOGO" -resize ${size}x${size} -background none -gravity center -extent ${size}x${size} "$ANDROID_RES/$dir/ic_launcher.png"
+        $CONVERT "$WORKING_LOGO" -resize ${size}x${size} -background none -gravity center -extent ${size}x${size} "$ANDROID_RES/$dir/ic_launcher_round.png"
+    done
+
+    # 5. Generate Adaptive Icon Foregrounds (API 26+)
+    # Android spec: 108dp canvas with safe zone at inner 72dp (inner 66.7%)
+    declare -A ADAPTIVE_DENSITIES=(
+        ["mipmap-mdpi"]="108:72"
+        ["mipmap-hdpi"]="162:108"
+        ["mipmap-xhdpi"]="216:144"
+        ["mipmap-xxhdpi"]="324:216"
+        ["mipmap-xxxhdpi"]="432:288"
+    )
+
+    for dir in "${!ADAPTIVE_DENSITIES[@]}"; do
+        sizes=(${ADAPTIVE_DENSITIES[$dir]//:/ })
+        canvas="${sizes[0]}"
+        logo="${sizes[1]}"
+        echo "  → $dir adaptive foreground: ${canvas}x${canvas} (logo ${logo}x${logo})"
+        $CONVERT "$WORKING_LOGO" -resize ${logo}x${logo} -background none -gravity center -extent ${canvas}x${canvas} "$ANDROID_RES/$dir/ic_launcher_foreground.png"
+    done
+
+    # 6. Generate Splash Screens (all densities & orientations)
+    echo "  → Generating splash screens (BG: $SPLASH_BG_COLOR)..."
+
+    # Generic fallback splash
+    $CONVERT -size 2732x2732 xc:"$SPLASH_BG_COLOR" \
+        \( "$WORKING_LOGO" -resize 800x800 \) -gravity center -composite \
+        "$ANDROID_RES/drawable/splash.png"
+
+    # Portrait splashes: "width:height:logo_size"
+    declare -A PORTRAIT_SPLASH=(
+        ["drawable-port-mdpi"]="320:480:160"
+        ["drawable-port-hdpi"]="480:800:240"
+        ["drawable-port-xhdpi"]="720:1280:360"
+        ["drawable-port-xxhdpi"]="960:1600:480"
+        ["drawable-port-xxxhdpi"]="1280:1920:640"
+    )
+
+    for dir in "${!PORTRAIT_SPLASH[@]}"; do
+        params=(${PORTRAIT_SPLASH[$dir]//:/ })
+        w="${params[0]}"
+        h="${params[1]}"
+        logo="${params[2]}"
+        mkdir -p "$ANDROID_RES/$dir"
+        $CONVERT -size ${w}x${h} xc:"$SPLASH_BG_COLOR" \
+            \( "$WORKING_LOGO" -resize ${logo}x${logo} \) -gravity center -composite \
+            "$ANDROID_RES/$dir/splash.png"
+    done
+
+    # Landscape splashes: "width:height:logo_size"
+    declare -A LANDSCAPE_SPLASH=(
+        ["drawable-land-mdpi"]="480:320:160"
+        ["drawable-land-hdpi"]="800:480:240"
+        ["drawable-land-xhdpi"]="1280:720:360"
+        ["drawable-land-xxhdpi"]="1600:960:480"
+        ["drawable-land-xxxhdpi"]="1920:1280:640"
+    )
+
+    for dir in "${!LANDSCAPE_SPLASH[@]}"; do
+        params=(${LANDSCAPE_SPLASH[$dir]//:/ })
+        w="${params[0]}"
+        h="${params[1]}"
+        logo="${params[2]}"
+        mkdir -p "$ANDROID_RES/$dir"
+        $CONVERT -size ${w}x${h} xc:"$SPLASH_BG_COLOR" \
+            \( "$WORKING_LOGO" -resize ${logo}x${logo} \) -gravity center -composite \
+            "$ANDROID_RES/$dir/splash.png"
+    done
+
+    echo -e "${GREEN}✓ Android assets generated successfully!${NC}"
+else
+    echo -e "${YELLOW}Android directory not found ($ANDROID_RES). Run 'npm run cap:add:android' to initialize.${NC}"
+fi
+
+# ============================================================================
+# IOS ASSETS (if ios project exists)
+# ============================================================================
+IOS_APPICON_DIR="$PROJECT_ROOT/ios/App/App/Assets.xcassets/AppIcon.appiconset"
+IOS_SPLASH_DIR="$PROJECT_ROOT/ios/App/App/Assets.xcassets/Splash.imageset"
+
+if [ -d "$IOS_APPICON_DIR" ]; then
+    echo -e "${GREEN}🍏 Generating iOS Assets...${NC}"
+    $CONVERT "$WORKING_LOGO" -resize 1024x1024 -background "$ICON_BG_COLOR" -gravity center -extent 1024x1024 "$IOS_APPICON_DIR/AppIcon-512@2x.png"
+    echo "  → AppIcon-512@2x.png: 1024x1024"
+    if [ -d "$IOS_SPLASH_DIR" ]; then
+        $CONVERT -size 2732x2732 xc:"$SPLASH_BG_COLOR" \
+            \( "$WORKING_LOGO" -resize 800x800 \) -gravity center -composite \
+            "$IOS_SPLASH_DIR/splash.png"
+        echo "  → Splash.imageset/splash.png: 2732x2732"
+    fi
+    echo -e "${GREEN}✓ iOS assets generated successfully!${NC}"
+fi
+
 echo ""
-
-# ============================================================================
-# Generate regular launcher icons
-# ============================================================================
-echo -e "${GREEN}📱 Generating launcher icons...${NC}"
-
-declare -A ICON_SIZES=(
-    ["mipmap-mdpi"]=48
-    ["mipmap-hdpi"]=72
-    ["mipmap-xhdpi"]=96
-    ["mipmap-xxhdpi"]=144
-    ["mipmap-xxxhdpi"]=192
-)
-
-for dir in "${!ICON_SIZES[@]}"; do
-    size="${ICON_SIZES[$dir]}"
-    echo "  → $dir: ${size}x${size}"
-    $CONVERT "$SOURCE_LOGO" -resize ${size}x${size} -extent ${size}x${size} -gravity center "$RES_DIR/$dir/ic_launcher.png"
-    $CONVERT "$SOURCE_LOGO" -resize ${size}x${size} -extent ${size}x${size} -gravity center "$RES_DIR/$dir/ic_launcher_round.png"
-done
-
-# ============================================================================
-# Generate adaptive icon foreground (108x108 for all densities)
-# ============================================================================
-echo ""
-echo -e "${GREEN}🎨 Generating adaptive icon foreground...${NC}"
-
-for dir in "${!ICON_SIZES[@]}"; do
-    echo "  → $dir/ic_launcher_foreground.png: 108x108"
-    $CONVERT "$SOURCE_LOGO" -resize 72x72 -extent 108x108 -gravity center "$RES_DIR/$dir/ic_launcher_foreground.png"
-done
-
-# Copy to drawable directory only (not drawable-v24 to avoid XML conflict)
-$CONVERT "$SOURCE_LOGO" -resize 72x72 -extent 108x108 -gravity center "$RES_DIR/drawable/ic_launcher_foreground.png"
-
-# ============================================================================
-# Generate splash screen (white background, centered logo)
-# ============================================================================
-echo ""
-echo -e "${GREEN}Generating splash screen...${NC}"
-echo "  → drawable/splash.png: 2880x1776"
-
-$CONVERT -size 2880x1776 xc:white \
-    \( "$SOURCE_LOGO" -resize 600x600 \) -gravity center -composite \
-    "$RES_DIR/drawable/splash.png"
-
-# ============================================================================
-# Summary
-# ============================================================================
-echo ""
-echo -e "${GREEN}All mobile icons generated successfully!${NC}"
-echo ""
-echo "Generated files:"
-echo "  • Launcher icons (mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi)"
-echo "  • Adaptive icon foreground (108x108)"
-echo "  • Splash screen (2880x1776, white background)"
-echo ""
-echo -e "${YELLOW}Tip: Rebuild your app to see the changes:${NC}"
+echo -e "${GREEN}✨ All branding assets generated successfully!${NC}"
+echo -e "${YELLOW}To sync with Capacitor, run:${NC}"
 echo "  npx cap sync android"
 echo "  # or"
-echo "  make capacitor-sync"
+echo "  npm run cap:sync"

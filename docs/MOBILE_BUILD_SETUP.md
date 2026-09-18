@@ -106,6 +106,10 @@ CAPACITOR_SERVER_URL=https://app.tuempresa.com  # URL de tu backend Laravel
 CAPACITOR_SERVER_CLEARTEXT=false                 # Permitir HTTP (false en prod)
 CAPACITOR_ANDROID_SCHEME=https                   # Scheme para Android
 
+# Personalización de Marca e Iconos
+CAPACITOR_ICON_BG_COLOR=#ffffff              # Color de fondo del icono adaptativo
+CAPACITOR_SPLASH_BG_COLOR=#ffffff            # Color de fondo del splash screen
+
 # CORS
 FRONTEND_URL=https://app.tuempresa.com      # URL del frontend para CORS
 ```
@@ -163,32 +167,28 @@ El workflow se ejecuta automáticamente cuando:
 
 ## Generación de APK
 
-### APK Debug (Para Pruebas)
+### Generación Automática de APK y Releases
 
-Se genera automáticamente en cada push:
+El starter-kit gestiona la entrega del APK de forma 100% automática:
 
-1. Ve a la pestaña **Actions** en GitHub
-2. Haz clic en el workflow más reciente
-3. En la sección **Artifacts**, descarga `android-apk-{sha}.zip`
-4. Descomprime y usa el archivo `.apk`
+1. **Flujo Continuo (Push / Merge a `main`)**:
+   - Cada vez que haces push o merge a la rama `main`, GitHub Actions compila automáticamente el APK con el logo y branding actualizados.
+   - **Actualiza el release `latest`** en GitHub de forma pública.
+   - El botón *"Descargar APK"* de tu web siempre apunta a la última compilación sin que tengas que hacer nada manual.
 
-### APK/AAB Release (Para Play Store)
+2. **Flujo Versionado (Git Tags)**:
+   - Cuando quieras publicar una versión formal numerada (ej. `v1.0.1`):
+     ```bash
+     git tag -a v1.0.1 -m "Release v1.0.1"
+     git push origin v1.0.1
+     ```
+   - GitHub Actions crea el release permanente `v1.0.1` y actualiza también `latest`.
+   - La versión interna del APK (`versionName` y `versionCode`) se incrementa automáticamente.
 
-Para generar versiones firmadas:
-
-1. **Crea un tag** en Git:
-   ```bash
-   git tag -a v1.0.0 -m "Release 1.0.0"
-   git push origin v1.0.0
-   ```
-
-2. **GitHub Actions** generará:
-   - `app-debug.apk` (para pruebas)
-   - `app-debug.aab` (para Play Store)
-
-3. **Los archivos estarán en**:
-   - **Artifacts**: Descarga directa
-   - **Releases**: Draft release con los archivos
+3. **Disponibilidad de los Archivos**:
+   - **En tu Web**: Botón *"Descargar APK"* en la página principal (`/releases/latest/download/app-debug.apk`).
+   - **En GitHub Releases**: Enlace público en `https://github.com/{usuario}/{repo}/releases`.
+   - **En GitHub Actions Artifacts**: Historial de compilaciones en cada run.
 
 ---
 
@@ -258,15 +258,29 @@ npm run cap:init
 # Agregar Android (solo primera vez)
 npm run cap:add:android
 
-# Sincronizar cambios
-npm run cap:sync
-
-# Abrir en Android Studio
-npm run cap:open:android
-
-# Build completo de Android
+# Build completo de Android (incluye build web, generación de iconos y sync)
 npm run build:android
+
+# Generar iconos y splash screens manualmente
+npm run cap:icons
+# o con Make
+make capacitor-icons
 ```
+
+### 🎨 Personalización de Iconos y Splash Screen
+
+Para cambiar la identidad de la app móvil en cualquier nuevo proyecto:
+
+1. **Reemplaza el logo**:
+   - Ubicación por defecto: `public/mobile-icons/logo.png` (PNG transparente recomendado, min 512x512 o 1024x1024).
+   - Opcionalmente puedes usar `public/logo.png`, `public/apple-touch-icon.png` o `public/favicon.svg`.
+2. **Generar los recursos**:
+   - Ejecuta `npm run cap:icons` o compila con `npm run build:android`.
+   - El script genera automáticamente:
+     - Iconos normales y redondeados para todas las densidades (`mdpi`, `hdpi`, `xhdpi`, `xxhdpi`, `xxxhdpi`).
+     - Iconos adaptativos de Android (`ic_launcher_foreground.png`) con zona segura (safe-zone 66%) para evitar recortes en Android 8+.
+     - Splash screens en todas las resoluciones y orientaciones (portrait y landscape).
+     - Elimina los vectores XML por defecto de Capacitor para garantizar que no se sobreescriba tu icono en dispositivos modernos.
 
 ### GitHub CLI
 

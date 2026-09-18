@@ -440,14 +440,17 @@ horizon-link: ## Show Horizon URL
 # CAPACITOR (Mobile App)
 # ============================================================================
 
-.PHONY: capacitor-icons capacitor-sync capacitor-open-android
+.PHONY: capacitor-icons capacitor-sync capacitor-open-android capacitor-build
 
-capacitor-icons: ## Generate mobile icons from public/logo-mobil.png
+capacitor-icons: ## Generate mobile icons from public/mobile-icons/logo.png
 	@./scripts/generate-mobile-icons.sh
 	@echo "Run 'make capacitor-sync' to apply changes"
 
-capacitor-sync: ## Sync Capacitor with web assets
-	npx cap sync android
+capacitor-sync: ## Sync Capacitor with web assets and icons
+	npm run cap:sync
+
+capacitor-build: ## Build Android APK with branding assets
+	npm run build:android
 
 capacitor-open-android: ## Open Android project in Android Studio
 	npx cap open android
