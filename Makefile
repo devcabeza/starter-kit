@@ -1,4 +1,5 @@
 .PHONY: help up down restart status logs
+.PHONY: capacitor-icons capacitor-sync capacitor-open-android
 .PHONY: artisan composer npm node
 .PHONY: migrate migrate-fresh migrate-rollback seed db-wipe
 .PHONY: test test-coverage pest pest-filter pest-parallel
@@ -434,3 +435,19 @@ horizon-purge: ## Terminate rogue Horizon processes
 
 horizon-link: ## Show Horizon URL
 	@echo "📊 Horizon dashboard: http://localhost:8000/horizon"
+
+# ============================================================================
+# CAPACITOR (Mobile App)
+# ============================================================================
+
+.PHONY: capacitor-icons capacitor-sync capacitor-open-android
+
+capacitor-icons: ## Generate mobile icons from public/logo-mobil.png
+	@./scripts/generate-mobile-icons.sh
+	@echo "Run 'make capacitor-sync' to apply changes"
+
+capacitor-sync: ## Sync Capacitor with web assets
+	npx cap sync android
+
+capacitor-open-android: ## Open Android project in Android Studio
+	npx cap open android
