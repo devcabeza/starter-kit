@@ -77,9 +77,9 @@ class AppServiceProvider extends ServiceProvider
     {
         Mail::extend('sendrix', function () {
             return new SendrixTransport(
-                apiKey: config('services.sendrix.api_key'),
-                projectId: config('services.sendrix.project_id'),
-                baseUrl: config('services.sendrix.base_url'),
+                apiKey: (string) config('services.sendrix.api_key', ''),
+                projectId: (string) config('services.sendrix.project_id', ''),
+                baseUrl: (string) config('services.sendrix.base_url', ''),
             );
         });
     }
