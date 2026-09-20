@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mail;
 
 use Illuminate\Support\Facades\Http;
@@ -12,11 +14,19 @@ use Symfony\Component\Mime\RawMessage;
 
 class SendrixTransport implements TransportInterface
 {
+    private readonly string $key;
+
+    private readonly string $baseUrl;
+
     public function __construct(
-        private readonly string $apiKey,
-        private readonly string $projectId,
-        private readonly string $baseUrl,
-    ) {}
+        ?string $key = null,
+        string $baseUrl = 'https://sendrix.alejandrocabeza.dev',
+        ?string $apiKey = null,
+        ?string $projectId = null,
+    ) {
+        $this->key = (string) ($key ?? $apiKey ?? '');
+        $this->baseUrl = $baseUrl;
+    }
 
     public function send(RawMessage $message, ?Envelope $envelope = null): ?SentMessage
     {
@@ -37,7 +47,14 @@ class SendrixTransport implements TransportInterface
         ];
 
         $from = $email->getFrom();
-        if ($from !== [] && ! empty($from[0]->getName())) {
+        if ($from === []) {
+            $fromAddress = (string) (config('mail.from.address') ?? 'hello@example.com');
+            $fromName = (string) (config('mail.from.name') ?? '');
+            $email->from(new Address($fromAddress, $fromName));
+            $from = $email->getFrom();
+        }
+
+        if (! empty($from[0]->getName())) {
             $payload['from_name'] = $from[0]->getName();
         }
 
@@ -56,12 +73,11 @@ class SendrixTransport implements TransportInterface
 
         $url = rtrim($this->baseUrl, '/').'/api/v1/send';
 
-        $response = Http::withHeaders([
-            'Authorization' => "Bearer {$this->apiKey}",
-            'X-Project-ID' => $this->projectId,
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-        ])->timeout(10)->post($url, $payload);
+        $response = Http::withToken($this->key)
+            ->asJson()
+            ->acceptJson()
+            ->timeout(10)
+            ->post($url, $payload);
 
         if ($response->failed()) {
             $error = $response->json('error') ?? $response->json('message') ?? $response->body();
@@ -73,7 +89,16 @@ class SendrixTransport implements TransportInterface
             recipients: $email->getTo(),
         );
 
-        return new SentMessage($message, $sentEnvelope);
+        $sentMessage = new SentMessage($message, $sentEnvelope);
+
+        if ($response->successful()) {
+            $sendrixMessageId = $response->json('id');
+            if (! empty($sendrixMessageId)) {
+                $sentMessage->setMessageId((string) $sendrixMessageId);
+            }
+        }
+
+        return $sentMessage;
     }
 
     public function __toString(): string
