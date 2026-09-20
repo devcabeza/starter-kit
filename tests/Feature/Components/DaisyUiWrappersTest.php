@@ -168,3 +168,126 @@ test('dropdown component renders trigger, dropdown classes and content', functio
         ->toContain('text-rose-400')
         ->toContain('Salir');
 });
+
+test('select component renders options, label, and attributes', function () {
+    $html = Blade::render('<x-select name="role" label="Rol" :options="[\'admin\' => \'Administrador\', \'user\' => \'Usuario\']" />');
+
+    expect($html)
+        ->toContain('Rol')
+        ->toContain('name="role"')
+        ->toContain('select')
+        ->toContain('select-bordered')
+        ->toContain('value="admin"')
+        ->toContain('Administrador');
+});
+
+test('textarea component renders label, rows, and slot content', function () {
+    $html = Blade::render('<x-textarea name="bio" label="Biografía" rows="4">Texto de prueba</x-textarea>');
+
+    expect($html)
+        ->toContain('Biografía')
+        ->toContain('name="bio"')
+        ->toContain('rows="4"')
+        ->toContain('textarea')
+        ->toContain('textarea-bordered')
+        ->toContain('Texto de prueba');
+});
+
+test('checkbox component renders with touch target and label', function () {
+    $html = Blade::render('<x-checkbox name="terms" label="Acepto los términos" color="primary" />');
+
+    expect($html)
+        ->toContain('type="checkbox"')
+        ->toContain('name="terms"')
+        ->toContain('checkbox')
+        ->toContain('checkbox-primary')
+        ->toContain('min-h-[44px]')
+        ->toContain('Acepto los términos');
+});
+
+test('toggle component renders switch with label and touch target', function () {
+    $html = Blade::render('<x-toggle name="notifications" label="Notificaciones push" color="success" />');
+
+    expect($html)
+        ->toContain('type="checkbox"')
+        ->toContain('name="notifications"')
+        ->toContain('toggle')
+        ->toContain('toggle-success')
+        ->toContain('min-h-[44px]')
+        ->toContain('Notificaciones push');
+});
+
+test('file-input component renders with label and file classes', function () {
+    $html = Blade::render('<x-file-input name="document" label="Subir Archivo" />');
+
+    expect($html)
+        ->toContain('type="file"')
+        ->toContain('name="document"')
+        ->toContain('file-input')
+        ->toContain('file-input-bordered')
+        ->toContain('Subir Archivo');
+});
+
+test('skeleton component renders pulse animation placeholder', function () {
+    $html = Blade::render('<x-skeleton shape="circle" class="w-12 h-12" />');
+
+    expect($html)
+        ->toContain('skeleton')
+        ->toContain('rounded-full')
+        ->toContain('w-12 h-12');
+});
+
+test('spinner component renders loading spinner with size and color', function () {
+    $html = Blade::render('<x-spinner size="lg" color="primary" />');
+
+    expect($html)
+        ->toContain('loading')
+        ->toContain('loading-spinner')
+        ->toContain('loading-lg');
+});
+
+test('toast component renders toast container at specified position', function () {
+    $html = Blade::render('<x-toast position="top-end"><span>Notificación</span></x-toast>');
+
+    expect($html)
+        ->toContain('toast')
+        ->toContain('toast-top toast-end')
+        ->toContain('Notificación');
+});
+
+test('bottom-nav component renders fixed container with safe area inset', function () {
+    $html = Blade::render('<x-bottom-nav><button>Inicio</button></x-bottom-nav>');
+
+    expect($html)
+        ->toContain('btm-nav')
+        ->toContain('fixed bottom-0')
+        ->toContain('Inicio');
+});
+
+test('drawer component renders drawer container with sidebar slot', function () {
+    $html = Blade::render('
+        <x-drawer id="test-drawer">
+            <p>Contenido principal</p>
+            <x-slot:sidebar>
+                <a>Elemento lateral</a>
+            </x-slot:sidebar>
+        </x-drawer>
+    ');
+
+    expect($html)
+        ->toContain('drawer')
+        ->toContain('drawer-toggle')
+        ->toContain('drawer-content')
+        ->toContain('drawer-side')
+        ->toContain('Contenido principal')
+        ->toContain('Elemento lateral');
+});
+
+test('honeypot component renders hidden spam trap', function () {
+    $html = Blade::render('<x-honeypot name="anti_spam_trap" />');
+
+    expect($html)
+        ->toContain('display:none')
+        ->toContain('anti_spam_trap')
+        ->toContain('tabindex="-1"');
+});

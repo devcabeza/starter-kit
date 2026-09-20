@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
+use App\Application\Health\Actions\CheckSystemHealthAction;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,15 +16,12 @@ use Illuminate\Support\Facades\Route;
 // Public routes
 Route::view('/', 'welcome')->name('home');
 
-// Health check (used by Docker HEALTHCHECK)
-Route::get('/health', function () {
-    try {
-        DB::connection()->getPdo();
+// Health check (used by Docker HEALTHCHECK and monitoring)
+Route::get('/health', function (CheckSystemHealthAction $healthAction) {
+    $report = $healthAction->execute();
+    $statusCode = $report['status'] === 'ok' ? 200 : 503;
 
-        return response()->json(['status' => 'ok'], 200);
-    } catch (Exception $e) {
-        return response()->json(['status' => 'error', 'message' => 'Database unreachable'], 503);
-    }
+    return response()->json($report, $statusCode);
 })->name('health');
 
 // Feature routes

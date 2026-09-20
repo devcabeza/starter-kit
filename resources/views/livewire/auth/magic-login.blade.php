@@ -16,6 +16,7 @@
         {{-- Form Card --}}
         <div class="bg-zinc-900/80 border border-zinc-800/80 rounded-2xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
             <form wire:submit="submit" class="space-y-6">
+                <x-honeypot wire:model="honeypot" />
                 <div>
                     <label for="email" class="block text-sm font-medium text-zinc-300 mb-2">
                         Correo electrónico
