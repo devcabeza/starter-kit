@@ -119,9 +119,6 @@ COPY artisan artisan
 # Copy built frontend assets
 COPY --from=frontend /app/dist/ public/build/
 
-# Publish Livewire static assets
-RUN php artisan livewire:publish --assets
-
 # Recreate storage/cache directories (excluded by .dockerignore)
 RUN mkdir -p storage/framework/{sessions,views,cache} \
     bootstrap/cache \
