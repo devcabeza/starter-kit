@@ -51,17 +51,15 @@ it('sends an email via sendrix transport with correct payload structure', functi
     });
 });
 
-it('supports backward-compatible constructor arguments', function () {
+it('uses default base url when none is provided', function () {
     Http::fake([
         'https://sendrix.alejandrocabeza.dev/api/v1/send' => Http::response([
-            'id' => 'legacy-456',
+            'id' => 'default-url-456',
         ], 200),
     ]);
 
     $transport = new SendrixTransport(
-        apiKey: 'sk_proj_legacy_key',
-        projectId: 'unused-project-id',
-        baseUrl: 'https://sendrix.alejandrocabeza.dev',
+        key: 'sk_proj_default_test_key',
     );
 
     $email = (new Email)
@@ -72,10 +70,11 @@ it('supports backward-compatible constructor arguments', function () {
     $sentMessage = $transport->send($email);
 
     expect($sentMessage)->not->toBeNull()
-        ->and($sentMessage->getMessageId())->toBe('legacy-456');
+        ->and($sentMessage->getMessageId())->toBe('default-url-456');
 
     Http::assertSent(function ($request) {
-        return $request->header('Authorization')[0] === 'Bearer sk_proj_legacy_key';
+        return $request->url() === 'https://sendrix.alejandrocabeza.dev/api/v1/send'
+            && $request->header('Authorization')[0] === 'Bearer sk_proj_default_test_key';
     });
 });
 

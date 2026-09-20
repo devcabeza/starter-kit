@@ -14,19 +14,10 @@ use Symfony\Component\Mime\RawMessage;
 
 class SendrixTransport implements TransportInterface
 {
-    private readonly string $key;
-
-    private readonly string $baseUrl;
-
     public function __construct(
-        ?string $key = null,
-        string $baseUrl = 'https://sendrix.alejandrocabeza.dev',
-        ?string $apiKey = null,
-        ?string $projectId = null,
-    ) {
-        $this->key = (string) ($key ?? $apiKey ?? '');
-        $this->baseUrl = $baseUrl;
-    }
+        private readonly string $key,
+        private readonly string $baseUrl = 'https://sendrix.alejandrocabeza.dev',
+    ) {}
 
     public function send(RawMessage $message, ?Envelope $envelope = null): ?SentMessage
     {
