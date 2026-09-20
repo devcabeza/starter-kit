@@ -291,3 +291,14 @@ test('honeypot component renders hidden spam trap', function () {
         ->toContain('anti_spam_trap')
         ->toContain('tabindex="-1"');
 });
+
+test('collapse component renders details with summary and collapse classes', function () {
+    $html = Blade::render('<x-collapse title="¿Cómo funciona?">Explicación del contenido</x-collapse>');
+
+    expect($html)
+        ->toContain('<details')
+        ->toContain('collapse')
+        ->toContain('collapse-arrow')
+        ->toContain('¿Cómo funciona?')
+        ->toContain('Explicación del contenido');
+});
