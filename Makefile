@@ -16,6 +16,7 @@
 .PHONY: make-model make-controller make-livewire make-migration make-seeder make-factory
 .PHONY: filament install update
 .PHONY: telescope telescope-clear telescope-install telescope-publish telescope-link
+.PHONY: git-hooks
 
 # ============================================================================
 # Docker/Sail Commands
@@ -33,6 +34,11 @@ help: ## Show this help message
 	@echo ""
 	@echo "Available commands:"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-25s\033[0m %s\n", $$1, $$2}'
+
+git-hooks: ## Configure git core.hooksPath to use project .githooks
+	@chmod +x .githooks/* 2>/dev/null || true
+	@git config core.hooksPath .githooks
+	@echo "\033[32mGit hooks configured successfully to .githooks\033[0m"
 
 # ----------------------------------------------------------------------------
 # Docker
