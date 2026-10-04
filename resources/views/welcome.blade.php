@@ -41,6 +41,10 @@
 
                     {{-- Navigation Links (Desktop) --}}
                     <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400 select-none">
+                        <a href="#demo" class="hover:text-white transition-colors flex items-center gap-1.5 text-indigo-300">
+                            <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse shrink-0"></span>
+                            <span>Video Demo</span>
+                        </a>
                         <a href="#features" class="hover:text-white transition-colors">Ventajas</a>
                         <a href="#architecture" class="hover:text-white transition-colors">Arquitectura</a>
                         <a href="#stack" class="hover:text-white transition-colors">Tech Stack</a>
@@ -118,6 +122,18 @@
             {{-- Mobile Navigation Modal (DaisyUI Bottom Sheet) --}}
             <x-modal id="mobile_navigation_modal" title="Menú de Navegación">
                 <nav class="space-y-1 pt-1 select-none">
+                    <a
+                        href="#demo"
+                        onclick="document.getElementById('mobile_navigation_modal').close()"
+                        class="flex items-center gap-3 min-h-[48px] px-3.5 rounded-xl text-base font-medium text-indigo-300 hover:text-white active:bg-zinc-800/80 transition-colors"
+                    >
+                        <span class="w-8 h-8 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+                            </svg>
+                        </span>
+                        <span>Video Demo (5 min)</span>
+                    </a>
                     <a
                         href="#features"
                         onclick="document.getElementById('mobile_navigation_modal').close()"
@@ -334,10 +350,24 @@
                                 Setup en 2 minutos
                             </span>
                         </div>
+
+                        {{-- Anchor Link to Video --}}
+                        <div class="pt-1">
+                            <a
+                                href="#demo"
+                                class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-indigo-400 hover:text-indigo-300 transition-colors py-1.5 px-4 rounded-full border border-indigo-500/20 bg-indigo-950/40 hover:border-indigo-500/40 active:scale-95 select-none"
+                            >
+                                <svg class="w-3.5 h-3.5 fill-current shrink-0 text-rose-500" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z" />
+                                </svg>
+                                <span>Ver video de presentación (5:37 min)</span>
+                                <span class="text-zinc-500">&darr;</span>
+                            </a>
+                        </div>
                     </div>
 
-                    {{-- Hero Showcase Mockup (Interactive Code / Stack Preview) --}}
-                    <div class="mt-10 sm:mt-14 max-w-5xl mx-auto w-full">
+                    {{-- Hero Showcase (Presentation Video & Setup Preview) --}}
+                    <div id="demo" class="mt-10 sm:mt-14 max-w-5xl mx-auto w-full scroll-mt-24">
                         <div class="relative rounded-2xl sm:rounded-3xl bg-zinc-900/90 border border-zinc-800 shadow-2xl overflow-hidden backdrop-blur-xl text-left">
                             {{-- Window Top Bar --}}
                             <div class="px-4 sm:px-6 py-3 bg-zinc-900 border-b border-zinc-800/80 flex items-center justify-between">
@@ -345,51 +375,72 @@
                                     <span class="w-3 h-3 rounded-full bg-rose-500/80 shrink-0"></span>
                                     <span class="w-3 h-3 rounded-full bg-amber-500/80 shrink-0"></span>
                                     <span class="w-3 h-3 rounded-full bg-emerald-500/80 shrink-0"></span>
-                                    <span class="ml-2 text-xs font-mono text-zinc-500 truncate">laravertex ~ starter-kit</span>
+                                    <span class="ml-2 text-xs font-mono text-zinc-400 truncate">laravertex ~ video-presentacion.mp4</span>
                                 </div>
                                 <div class="flex items-center gap-2 text-xs font-mono text-zinc-400 shrink-0">
-                                    <x-badge variant="neutral" size="xs" class="border border-emerald-500/30 text-emerald-400 bg-emerald-500/10">
-                                        Pest: 100%
+                                    <x-badge variant="neutral" size="xs" class="border border-indigo-500/30 text-indigo-400 bg-indigo-500/10">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse shrink-0"></span>
+                                        HD 720p &bull; 5:37 min
                                     </x-badge>
-                                    <x-badge variant="neutral" size="xs" class="border border-indigo-500/30 text-indigo-400 bg-indigo-500/10 hidden sm:inline-flex">
-                                        Larastan: Level 8
+                                    <x-badge variant="neutral" size="xs" class="border border-emerald-500/30 text-emerald-400 bg-emerald-500/10 hidden sm:inline-flex">
+                                        Demo Oficial
                                     </x-badge>
                                 </div>
                             </div>
 
-                            {{-- Code / Architecture Highlights --}}
-                            <div class="p-4 sm:p-8 font-mono text-xs sm:text-sm text-zinc-300 space-y-4 select-text">
-                                <div class="flex items-center gap-2 text-zinc-500 text-xs">
-                                    <span class="text-indigo-400 font-bold">$</span>
-                                    <span class="text-zinc-400"># 1. Clona el proyecto y ejecuta el setup automatizado</span>
-                                </div>
-                                <div class="bg-zinc-950/70 p-3 sm:p-4 rounded-xl border border-zinc-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 min-w-0 max-w-full">
-                                    <div class="min-w-0 flex-1 overflow-x-auto py-1">
-                                        <code class="text-indigo-300 whitespace-nowrap block text-xs sm:text-sm">git clone https://github.com/devcabeza/starter-kit.git mi-app && cd mi-app && composer run setup</code>
-                                    </div>
-                                    <button
-                                        type="button"
-                                        onclick="navigator.clipboard.writeText('git clone https://github.com/devcabeza/starter-kit.git mi-app && cd mi-app && composer run setup'); this.innerText='¡Copiado! '; setTimeout(() => this.innerText='Copiar', 2000)"
-                                        class="shrink-0 self-end sm:self-auto inline-flex items-center justify-center min-h-[44px] min-w-[44px] px-3.5 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-sans active:scale-95 transition-all select-none cursor-pointer"
-                                    >
-                                        Copiar
-                                    </button>
-                                </div>
+                            {{-- HTML5 Video Player Container --}}
+                            <div class="relative w-full aspect-video bg-black overflow-hidden group">
+                                <video
+                                    id="hero-video"
+                                    class="w-full h-full object-cover block"
+                                    controls
+                                    playsinline
+                                    preload="metadata"
+                                    poster="{{ asset('video-poster.jpg') }}"
+                                >
+                                    <source src="{{ asset('Laravertex_Kit_de_Inicio.mp4') }}" type="video/mp4">
+                                    Tu navegador no soporta la reproducción de video MP4.
+                                </video>
+                            </div>
 
-                                <div class="flex items-center gap-2 text-zinc-500 text-xs pt-2">
-                                    <span class="text-indigo-400 font-bold">$</span>
-                                    <span class="text-zinc-400"># 2. Inicia el servidor de desarrollo y compila tu APK nativo</span>
-                                </div>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 min-w-0">
-                                    <div class="bg-zinc-950/70 p-3 sm:p-4 rounded-xl border border-zinc-800/80 min-w-0">
-                                        <div class="text-zinc-500 text-xs mb-1">Entorno Web Reactivo:</div>
-                                        <code class="text-emerald-400 block overflow-x-auto whitespace-nowrap text-xs sm:text-sm">npm run dev</code>
-                                        <div class="text-xs text-zinc-500 mt-2 font-sans">Livewire 4 + Vite Hot Module Reloading activo en http://localhost:8000</div>
+                            {{-- Interactive Setup Box Below Video --}}
+                            <div class="p-4 sm:p-6 bg-zinc-950/80 border-t border-zinc-800/80 flex flex-col md:flex-row md:items-center justify-between gap-4 font-mono text-xs">
+                                <div class="min-w-0 flex-1">
+                                    <div class="text-zinc-500 text-xs mb-1.5 font-sans flex items-center gap-2">
+                                        <span class="text-indigo-400 font-bold">$</span>
+                                        <span>Clona y ejecuta el setup automatizado en tu máquina:</span>
                                     </div>
-                                    <div class="bg-zinc-950/70 p-3 sm:p-4 rounded-xl border border-zinc-800/80 min-w-0">
-                                        <div class="text-zinc-500 text-xs mb-1">Compilación Android Nativa:</div>
-                                        <code class="text-purple-300 block overflow-x-auto whitespace-nowrap text-xs sm:text-sm">npm run build:android</code>
-                                        <div class="text-xs text-zinc-500 mt-2 font-sans">Capacitor 7 sincroniza vistas y Gradle genera tu app-debug.apk</div>
+                                    <div class="bg-zinc-900/90 p-2.5 sm:p-3 rounded-xl border border-zinc-800 flex items-center justify-between gap-3 min-w-0 max-w-full">
+                                        <code class="text-indigo-300 whitespace-nowrap overflow-x-auto block text-xs sm:text-sm">git clone https://github.com/devcabeza/starter-kit.git mi-app && cd mi-app && composer run setup</code>
+                                        <button
+                                            type="button"
+                                            onclick="navigator.clipboard.writeText('git clone https://github.com/devcabeza/starter-kit.git mi-app && cd mi-app && composer run setup'); this.innerText='¡Copiado! '; setTimeout(() => this.innerText='Copiar', 2000)"
+                                            class="shrink-0 inline-flex items-center justify-center min-h-[36px] px-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-sans active:scale-95 transition-all select-none cursor-pointer"
+                                        >
+                                            Copiar
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 shrink-0 font-sans text-xs text-zinc-400">
+                                    <div class="flex items-center gap-1.5">
+                                        <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                        </svg>
+                                        <span>Livewire 4</span>
+                                    </div>
+                                    <span class="text-zinc-600">&bull;</span>
+                                    <div class="flex items-center gap-1.5">
+                                        <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                        </svg>
+                                        <span>Capacitor 7 APK</span>
+                                    </div>
+                                    <span class="text-zinc-600">&bull;</span>
+                                    <div class="flex items-center gap-1.5">
+                                        <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                        </svg>
+                                        <span>Hexagonal</span>
                                     </div>
                                 </div>
                             </div>
@@ -872,6 +923,7 @@
                     </div>
 
                     <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-xs text-zinc-400">
+                        <a href="#demo" class="inline-flex items-center min-h-[44px] px-1 hover:text-indigo-300 transition-colors font-medium">Video Demo</a>
                         <a href="#features" class="inline-flex items-center min-h-[44px] px-1 hover:text-zinc-200 transition-colors">Ventajas</a>
                         <a href="#architecture" class="inline-flex items-center min-h-[44px] px-1 hover:text-zinc-200 transition-colors">Arquitectura</a>
                         <a href="#stack" class="inline-flex items-center min-h-[44px] px-1 hover:text-zinc-200 transition-colors">Stack</a>
