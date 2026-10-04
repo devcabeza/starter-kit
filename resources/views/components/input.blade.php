@@ -10,7 +10,7 @@
 ])
 
 @php
-$inputClasses = 'input w-full min-h-[44px] transition-colors focus:outline-none';
+$inputClasses = 'input w-full text-base min-h-[44px] transition-colors focus:outline-none';
 
 $sizeClasses = match ($size) {
     'xs' => 'input-xs min-h-[36px]',

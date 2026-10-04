@@ -1,6 +1,6 @@
-<div class="min-h-screen-safe flex flex-col pt-safe pb-safe">
-    {{-- Top Navbar --}}
-    <header class="border-b border-zinc-800/80 bg-zinc-900/50 backdrop-blur-xl sticky top-0 z-30">
+<div class="min-h-screen-safe flex flex-col w-full max-w-full">
+    {{-- Top Navbar with Safe Area Support --}}
+    <header class="border-b border-zinc-800/80 bg-zinc-900/80 backdrop-blur-xl sticky top-0 z-30 pt-safe">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <a
@@ -12,13 +12,13 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
                     </svg>
                 </a>
-                <h1 class="font-bold text-lg tracking-tight text-white">Configuraciones</h1>
+                <h1 class="font-bold text-lg tracking-tight text-white select-none">Configuraciones</h1>
             </div>
 
             <div class="flex items-center gap-2">
                 <a
                     href="{{ route('profile') }}"
-                    class="px-3 py-2 text-xs font-semibold rounded-xl bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-all min-h-[44px] flex items-center gap-2 active:scale-95"
+                    class="px-3 py-2 text-xs font-semibold rounded-xl bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-all min-h-[44px] flex items-center gap-2 active:scale-95 select-none"
                 >
                     <svg class="w-4 h-4 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
@@ -30,7 +30,7 @@
     </header>
 
     {{-- Main Content --}}
-    <div class="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-8 space-y-6">
+    <div class="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-8 space-y-6">
         {{-- Security & Authentication Card --}}
         <x-card title="Seguridad y Autenticación">
             <div class="space-y-4">
@@ -50,13 +50,13 @@
                     <div class="space-y-1">
                         <h4 class="text-base font-semibold text-white">Sesión Activa</h4>
                         <p class="text-sm text-zinc-400">
-                            Conectado actualmente desde tu navegador con el correo <strong class="text-zinc-200">{{ $user->email }}</strong>.
+                            Conectado actualmente desde tu navegador con el correo <strong class="text-zinc-200 break-all">{{ $user->email }}</strong>.
                         </p>
                     </div>
 
-                    <form method="POST" action="{{ route('auth.logout') }}">
+                    <form method="POST" action="{{ route('auth.logout') }}" class="w-full sm:w-auto">
                         @csrf
-                        <x-button type="submit" variant="ghost" size="sm" class="border border-zinc-700 text-zinc-300 hover:text-white">
+                        <x-button type="submit" variant="ghost" size="sm" class="w-full sm:w-auto min-h-[48px] sm:min-h-[40px] border border-zinc-700 text-zinc-300 hover:text-white">
                             Cerrar esta sesión
                         </x-button>
                     </form>
@@ -79,7 +79,7 @@
                     variant="danger"
                     size="sm"
                     onclick="document.getElementById('delete-account-modal').showModal()"
-                    class="shrink-0"
+                    class="w-full sm:w-auto min-h-[48px] sm:min-h-[40px] shrink-0"
                 >
                     Eliminar Cuenta
                 </x-button>
@@ -94,8 +94,8 @@
         </p>
 
         <x-slot:actions>
-            <form method="dialog">
-                <x-button variant="ghost" size="sm">
+            <form method="dialog" class="w-full sm:w-auto">
+                <x-button variant="ghost" size="sm" class="w-full sm:w-auto min-h-[48px] sm:min-h-[40px]">
                     Cancelar
                 </x-button>
             </form>
@@ -106,6 +106,7 @@
                 size="sm"
                 wire:click="deleteAccount"
                 wire:loading.attr="disabled"
+                class="w-full sm:w-auto min-h-[48px] sm:min-h-[40px]"
             >
                 <span wire:loading.remove wire:target="deleteAccount">Sí, eliminar mi cuenta</span>
                 <span wire:loading wire:target="deleteAccount" class="inline-flex items-center gap-2">
@@ -115,4 +116,7 @@
             </x-button>
         </x-slot:actions>
     </x-modal>
+
+    {{-- Mobile bottom navigation (native app pattern) --}}
+    <x-app-bottom-nav />
 </div>

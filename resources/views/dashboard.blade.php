@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen-safe flex flex-col pt-safe pb-safe">
-    {{-- Top Navbar --}}
-    <header class="border-b border-zinc-800/80 bg-zinc-900/50 backdrop-blur-xl sticky top-0 z-30">
+<div class="min-h-screen-safe flex flex-col w-full max-w-full">
+    {{-- Top Navbar with Safe Area Support --}}
+    <header class="border-b border-zinc-800/80 bg-zinc-900/80 backdrop-blur-xl sticky top-0 z-30 pt-safe">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <img src="{{ asset('favicon.svg') }}" alt="Laravertex" class="w-8 h-8">
-                <span class="font-bold text-lg tracking-tight text-white">Laravertex</span>
+                <img src="{{ asset('favicon.svg') }}" alt="Laravertex" class="w-8 h-8 select-none">
+                <span class="font-bold text-lg tracking-tight text-white select-none">Laravertex</span>
             </div>
 
             {{-- User Avatar Dropdown --}}
@@ -67,25 +67,25 @@
     </header>
 
     {{-- Main Content Container --}}
-    <div class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-8 space-y-6 sm:space-y-8">
         {{-- Welcome Banner --}}
-        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-900/40 via-zinc-900 to-zinc-950 border border-indigo-500/20 p-6 sm:p-10 shadow-2xl">
+        <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-indigo-900/40 via-zinc-900 to-zinc-950 border border-indigo-500/20 p-5 sm:p-10 shadow-2xl">
             <div class="relative z-10 space-y-3 max-w-2xl">
-                <x-badge variant="neutral" size="sm" class="bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 uppercase tracking-wider font-semibold py-1 px-3">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    Sesión iniciada vía Magic Link
+                <x-badge variant="neutral" size="sm" class="bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 uppercase tracking-wider font-semibold py-1 px-3 max-w-full whitespace-normal h-auto">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+                    <span>Sesión iniciada vía Magic Link</span>
                 </x-badge>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+                <h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
                     ¡Hola, {{ $user->name }}!
                 </h2>
-                <p class="text-zinc-300 text-base sm:text-lg leading-relaxed">
-                    Te has autenticado correctamente sin contraseñas. Tu cuenta está activa y verificada con el correo <strong class="text-white">{{ $user->email }}</strong>.
+                <p class="text-zinc-300 text-sm sm:text-base md:text-lg leading-relaxed select-text">
+                    Te has autenticado correctamente sin contraseñas. Tu cuenta está activa y verificada con el correo <strong class="text-white break-all">{{ $user->email }}</strong>.
                 </p>
             </div>
         </div>
 
         {{-- Bento Grid Features --}}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
             {{-- Mobile & Capacitor Card --}}
             <x-card>
                 <div class="space-y-3">
@@ -104,7 +104,7 @@
                     <x-button
                         href="https://github.com/devcabeza/starter-kit/releases/latest/download/app-debug.apk"
                         variant="neutral"
-                        class="w-full bg-zinc-800 hover:bg-zinc-700 text-white"
+                        class="w-full min-h-[48px] bg-zinc-800 hover:bg-zinc-700 text-white"
                         download="Laravertex.apk"
                     >
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -154,5 +154,8 @@
             </x-card>
         </div>
     </div>
+
+    {{-- Mobile bottom navigation (native app pattern) --}}
+    <x-app-bottom-nav />
 </div>
 @endsection

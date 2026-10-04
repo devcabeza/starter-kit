@@ -1,327 +1,304 @@
-# Sendrix API Reference
+# Sendrix API Reference (v1)
 
-Complete specification of all Sendrix endpoints, authentication requirements, schemas, and status codes.
+Especificación exhaustiva de los endpoints, esquemas, cabeceras y códigos de respuesta de la API v1 de Sendrix. Refleja el comportamiento real del servidor.
+
+- Prefijo base: `/api/v1`
+- Formato: JSON (`Content-Type: application/json`)
+- Autenticación: clave de proyecto (`Authorization: Bearer` o `X-Sendrix-Key`)
 
 ---
 
-## Authentication Reference
+## Autenticación y cabeceras
 
-| Context | Required Headers | Description |
+| Cabecera | Requerida | Descripción |
 |---|---|---|
-| **Client Sending & Status** | `Authorization: Bearer sk_proj_...`<br>`X-Project-ID: <uuid>` | Project-scoped authentication. API keys are generated when creating a project. |
-| **Admin Operations** | `Authorization: Bearer <SENDRIX_ADMIN_SECRET>` **OR**<br>`Authorization: Bearer <jwt_token>` | Server-to-server admin secret or JWT token returned by login/register. |
-| **Queue Worker Cron** | `Authorization: Bearer <CRON_SECRET>` | Internal worker authentication for `/api/v1/cron/process-queue`. |
-| **Resend Webhooks** | `Resend-Signature: <hmac_signature>` | Resend webhook signature verification. |
+| `Authorization` | Sí\* | `Bearer sndx_live_…` o `Bearer sndx_test_…` |
+| `X-Sendrix-Key` | Sí\* | Alternativa a `Authorization`. Si ambas están presentes gana el Bearer. |
+| `Content-Type` | Sí | `application/json` |
+| `Accept` | Recomendada | `application/json` |
+| `Prefer` | Opcional | `respond-async` fuerza el envío asíncrono. |
+| `X-Sendrix-Async` | Opcional | `true` o `1` fuerza el envío asíncrono. |
+
+\* Se requiere una de las dos cabeceras de autenticación.
+
+### Claves de proyecto
+
+| Prefijo | Comportamiento |
+|---|---|
+| `sndx_live_` | Clave productiva. Envía a través del proveedor conectado. |
+| `sndx_test_` | Clave de test. Fuerza **modo sandbox**: captura en el Buzón Sandbox, nunca envía correos reales. |
+
+Las claves se muestran una sola vez al crearlas y se almacenan con hash SHA-256. La clave resuelve el proyecto y el propietario; **no existe** cabecera `X-Project-ID` ni endpoints de administración JWT en v1.
+
+### Errores de autenticación
+
+```json
+// 401 Unauthorized
+{ "error": "Unauthorized", "message": "Missing Sendrix API Key. Provide it via Bearer token or X-Sendrix-Key header." }
+```
+
+```json
+// 401 Unauthorized (clave inválida/revocada)
+{ "error": "Unauthorized", "message": "Invalid or revoked Sendrix API Key." }
+```
 
 ---
 
-## 1. Client Sending Endpoints
+## 1. Enviar un correo individual
 
-### Send Transactional Email
-`POST /api/v1/send`
+### `POST /api/v1/send`
 
-Rate limited to **5 requests per minute** per project.
+Envía un correo transaccional de forma inmediata (`200`) o asíncrona (`202`).
 
-#### Headers
-- `Authorization: Bearer sk_proj_...` (Required)
-- `X-Project-ID: <uuid>` (Required)
-- `Content-Type: application/json`
+#### Payload
 
-#### Request Body
+| Campo | Tipo | Requerido | Restricciones |
+|---|---|---|---|
+| `to` | string | Sí | Email válido (`rfc` + `filter`). Un único destinatario. |
+| `subject` | string | Sí\* | Máx. 998 caracteres. \*No requerido si se usa `template`. |
+| `html` | string | Sí\* | Cuerpo HTML. \*No requerido si se usa `template`. |
+| `text` | string | No | Alternativa en texto plano. |
+| `template` | string | No | Slug de plantilla (o su id numérico). |
+| `variables` | object | No | Mapa de sustitución para `{{ variable }}`. |
+| `from_name` | string | No | Sobrescribe el nombre del remitente (máx. 255). |
+| `reply_to` | string | No | Email de respuesta. |
+| `cc` | string[] | No | Emails válidos. |
+| `bcc` | string[] | No | Emails válidos. |
+| `attachments` | object[] | No | Máx. 10. Cada uno: `filename` (req), `content` (req, base64), `content_type` (opcional). Total decodificado ≤ 10 MB. |
+| `async` | boolean | No | `true` → `202 Accepted` y encolado. |
+| `sandbox` | boolean | No | `true` → captura en Sandbox. |
+
+Si se envía `template` **y** `subject`/`html`, los valores del payload tienen prioridad sobre los de la plantilla.
+
+#### Ejemplo curl
+
+```bash
+curl -X POST "$SENDRIX_BASE_URL/api/v1/send" \
+  -H "Authorization: Bearer $SENDRIX_KEY" \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d '{
+    "to": "customer@example.com",
+    "subject": "¡Bienvenido!",
+    "html": "<h1>Bienvenido</h1>",
+    "reply_to": "soporte@miapp.com"
+  }'
+```
+
+#### Respuesta 200 OK (enviado)
+
 ```json
 {
+  "id": "01923e77-7777-7000-8000-000000000077",
+  "project_id": 1,
+  "status": "sent",
+  "resend_id": "resend-msg-abc123",
+  "from": "Mi App <waitlist@creator.dev>",
   "to": "customer@example.com",
-  "subject": "Order Confirmation #1094",
-  "html": "<h1>Thank you!</h1><p>Your order has been confirmed.</p>",
-  "from_name": "Acme Store",
-  "reply_to": "support@acme.com",
-  "cc": ["finance@acme.com"],
-  "bcc": ["archive@acme.com"]
+  "subject": "¡Bienvenido!",
+  "sent_at": "2026-10-01T15:00:00+00:00"
 }
 ```
 
-#### Field Specifications & Constraints
-- `to` (`string`, required): Single recipient valid email.
-- `subject` (`string`, required): 1 to 998 characters.
-- `html` (`string`, required): Minimum 1 character.
-- `from_name` (`string`, optional): Custom display name (overrides project default).
-- `reply_to` (`string`, optional): Valid reply-to email.
-- `cc` (`string[]`, optional): Array of valid email addresses.
-- `bcc` (`string[]`, optional): Array of valid email addresses.
-- **Recipient Limit**: `to` + count(`cc`) + count(`bcc`) <= 50.
+#### Respuesta 200 OK (capturado en sandbox)
 
-#### Responses
-
-**200 OK — Immediate Delivery:**
 ```json
 {
-  "success": true,
-  "id": "resend-uuid-1234",
-  "log_id": "01J3XYZABCDEF0123456789",
-  "timestamp": "2026-07-25T10:06:00.000Z"
+  "id": "01923e77-…",
+  "project_id": 1,
+  "status": "sandbox",
+  "resend_id": "sndx_sandbox_AbCdEf1234567890",
+  "from": "Mi App <waitlist@sandbox.local>",
+  "to": "customer@example.com",
+  "subject": "¡Bienvenido!",
+  "sent_at": "2026-10-01T15:00:00+00:00"
 }
 ```
 
-**200 OK — Duplicate Detected (Identical `to + subject + html`):**
-```json
-{
-  "success": true,
-  "id": "01J3XYZABCDEF0123456789",
-  "duplicated": true,
-  "message": "Email already sent"
-}
-```
+#### Respuesta 202 Accepted (encolado)
 
-**202 Accepted — Queued for Async Delivery (Provider Timeout or Temporary Error):**
 ```json
 {
-  "log_id": "01J3XYZABCDEF0123456789",
+  "id": "01923e77-…",
+  "project_id": 1,
   "status": "queued",
-  "message": "Request queued for async delivery"
-}
-```
-
-**429 Too Many Requests — Rate Limit Exceeded:**
-```json
-{
-  "error": "rate_limit_exceeded",
-  "message": "Rate limit exceeded. Try again in 45 seconds.",
-  "retry_after_seconds": 45
-}
-```
-*Headers: `X-RateLimit-Limit: 5`, `X-RateLimit-Remaining: 0`, `X-RateLimit-Reset: <timestamp>`, `Retry-After: 45`*
-
----
-
-### Get Send Status
-`GET /api/v1/send/:log_id`
-
-#### Headers
-- `Authorization: Bearer sk_proj_...`
-- `X-Project-ID: <uuid>`
-
-#### Response `200 OK`
-```json
-{
-  "log_id": "01J3XYZABCDEF0123456789",
-  "status": "delivered",
+  "resend_id": null,
+  "from": "Mi App <waitlist@creator.dev>",
   "to": "customer@example.com",
-  "subject": "Order Confirmation #1094",
-  "duplicated": false,
-  "created_at": "2026-07-25T10:06:00.000Z",
-  "updated_at": "2026-07-25T10:06:05.000Z"
+  "subject": "¡Bienvenido!",
+  "sent_at": null
 }
 ```
 
-**Possible Status Values:**
-- `queued`: Enqueued for async delivery attempt.
-- `sent`: Successfully handed off to Resend.
-- `delivered`: Confirmed delivery by destination mail server.
-- `bounced`: Email bounced (hard or soft).
-- `complained`: Recipient marked email as spam.
-- `failed`: All retries exhausted or fatal provider failure.
+#### Códigos de error
 
----
+| HTTP | `error` | Descripción |
+|---|---|---|
+| `401` | `Unauthorized` | Clave ausente, inválida o revocada. |
+| `422` | *(errores de validación)* | Payload inválido. P. ej. base64 inválido en `attachments.0.content`, tamaño > 10 MB en `attachments`. |
+| `404` | `TemplateNotFound` | La plantilla no existe para el proyecto. |
+| `422` | `TemplateInactive` | La plantilla existe pero está inactiva. |
+| `422` | `RecipientSuppressed` | Destinatario en la lista de supresión (incluye `reason`). |
+| `429` | `QuotaExceeded` | Cuota diaria del proyecto superada. |
+| `400` | `ProviderNotConfigured` | Sin proveedor conectado o dominio verificado. |
+| `502` | `ProviderError` | El proveedor rechazó el envío. |
 
-## 2. Admin Authentication Endpoints
-
-### Register Initial Admin Account
-`POST /api/v1/auth/register`
-
-Requires `SENDRIX_ADMIN_SECRET` Bearer token.
-
-#### Request Body
 ```json
-{
-  "email": "admin@example.com",
-  "password": "your-strong-password"
-}
-```
+// 422 RecipientSuppressed
+{ "error": "RecipientSuppressed", "message": "…", "reason": "hard_bounce" }
 
-#### Response `201 Created`
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "user": {
-    "id": "550e8400-e29b-41d4-a716-446655440000",
-    "email": "admin@example.com",
-    "role": "admin",
-    "created_at": "2026-07-25T10:00:00.000Z"
-  }
-}
-```
+// 429 QuotaExceeded
+{ "error": "QuotaExceeded", "message": "Project 'Mi App' has exceeded its daily quota of 100 emails." }
 
-### Admin Login
-`POST /api/v1/auth/login`
+// 404 TemplateNotFound
+{ "error": "TemplateNotFound", "message": "…" }
 
-#### Request Body
-```json
-{
-  "email": "admin@example.com",
-  "password": "your-strong-password"
-}
-```
+// 400 ProviderNotConfigured
+{ "error": "ProviderNotConfigured", "message": "…" }
 
-#### Response `200 OK`
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "user": {
-    "id": "550e8400-e29b-41d4-a716-446655440000",
-    "email": "admin@example.com",
-    "role": "admin",
-    "created_at": "2026-07-25T10:00:00.000Z"
-  }
-}
+// 502 ProviderError
+{ "error": "ProviderError", "message": "Resend API error: …" }
 ```
 
 ---
 
-## 3. Admin Management Endpoints
+## 2. Enviar por lotes (Batch)
 
-All admin endpoints accept `Authorization: Bearer <SENDRIX_ADMIN_SECRET>` or `Authorization: Bearer <jwt_token>`.
+### `POST /api/v1/batch`
 
-### Create Project
-`POST /api/v1/admin/projects`
+Envía entre **1 y 100** correos en una única petición. Cada ítem se procesa de forma independiente.
 
-#### Request Body
+#### Payload
+
 ```json
 {
-  "name": "my-saas-app",
-  "from_name": "My SaaS App",
-  "from_email": "noreply@sendrix.com"
-}
-```
-
-#### Response `201 Created`
-```json
-{
-  "project_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-  "name": "my-saas-app",
-  "api_key": "sk_proj_a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6",
-  "from_name": "My SaaS App",
-  "from_email": "noreply@sendrix.com",
-  "is_active": true,
-  "created_at": "2026-07-25T10:05:00.000Z"
-}
-```
-*Note: `api_key` is displayed only on creation.*
-
-### List Projects
-`GET /api/v1/admin/projects?page=1&limit=20`
-
-#### Response `200 OK`
-```json
-{
-  "projects": [
-    {
-      "project_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-      "name": "my-saas-app",
-      "from_name": "My SaaS App",
-      "from_email": "noreply@sendrix.com",
-      "is_active": true,
-      "created_at": "2026-07-25T10:05:00.000Z"
-    }
+  "batch": [
+    { "to": "user1@example.com", "subject": "Notificación 1", "html": "<p>Uno</p>" },
+    { "to": "user2@example.com", "template": "welcome", "variables": { "name": "Ana" } }
   ],
-  "total": 1,
-  "page": 1,
-  "limit": 20
+  "async": false
 }
 ```
 
-### Rotate Project API Key
-`PATCH /api/v1/admin/projects/:id/rotate-key`
+- El array **debe** llamarse `batch` (mínimo 1, máximo 100).
+- Cada ítem admite los mismos campos que `/send` salvo `attachments`: `to`, `subject`, `html`, `text`, `template`, `variables`, `reply_to`, `from_name`, `cc`, `bcc` y `sandbox` por ítem.
+- `async: true` a nivel raíz encola todos los ítems.
+- Si falta `batch` o está vacío: `422` con `{"error":"ValidationFailed","errors":{…}}`.
 
-#### Response `200 OK`
+#### Respuesta
+
 ```json
 {
-  "project_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-  "api_key": "sk_proj_newkey99887766554433221100",
-  "message": "Previous key has been invalidated"
-}
-```
-
-### Retrieve Project Logs
-`GET /api/v1/admin/projects/:id/logs?page=1&limit=50&status=delivered&since=2026-07-01T00:00:00Z`
-
-#### Response `200 OK`
-```json
-{
-  "logs": [
-    {
-      "id": "01J3XYZABCDEF0123456789",
-      "to_recipient": "customer@example.com",
-      "subject": "Order Confirmation #1094",
-      "status": "delivered",
-      "error_message": null,
-      "created_at": "2026-07-25T10:06:00.000Z"
-    }
-  ],
-  "total": 1,
-  "page": 1,
-  "limit": 50
-}
-```
-
-### Global Metrics
-`GET /api/v1/metrics?period=this_month`
-
-Valid periods: `today`, `yesterday`, `this_week`, `last_week`, `this_month`, `last_month`, `this_year`.
-
-#### Response `200 OK`
-```json
-{
-  "global": {
-    "total_sent": 1500,
-    "total_delivered": 1475,
-    "total_failed": 25,
-    "total_bounced": 8,
-    "total_complained": 1,
-    "failure_rate": 1.67,
-    "period": { "since": "2026-07-01T00:00:00.000Z", "until": "2026-07-31T23:59:59.999Z" }
-  },
-  "top_project": { "id": "f47ac10b...", "name": "my-saas-app", "total": 920 },
-  "projects_breakdown": [
-    { "project_id": "f47ac10b...", "name": "my-saas-app", "sent": 920, "delivered": 910 }
+  "total": 2,
+  "successful": 1,
+  "failed": 1,
+  "data": [
+    { "index": 0, "to": "user1@example.com", "status": "sent", "id": "019…", "provider_message_id": "resend-msg-1" },
+    { "index": 1, "to": "user2@example.com", "status": "suppressed", "error": "RecipientSuppressed", "message": "…", "reason": "hard_bounce" }
   ]
 }
 ```
 
+| HTTP | Cuándo |
+|---|---|
+| `200` | Todos los ítems exitosos. |
+| `207` Multi-Status | Éxito parcial (algunos ítems fallan). |
+| `422` | Todos los ítems fallan, o payload raíz inválido. |
+
+Estados por ítem (`data[].status`): `sent`, `queued`, `suppressed`, `quota_exceeded`, `provider_error`, `error` (plantilla), `failed`.
+
+```json
+// 422 ValidationFailed
+{ "error": "ValidationFailed", "message": "The batch request payload failed validation.", "errors": { "batch": ["The batch parameter is required."] } }
+```
+
 ---
 
-## 4. System & Webhook Endpoints
+## 3. Consultar el estado de un correo
 
-### Health Check
-`GET /api/v1/health` (No authentication required)
+### `GET /api/v1/emails/{id}`
 
-#### Response `200 OK` (Healthy)
+`{id}` es el **log id** (UUID) devuelto por `/send` o `/batch`.
+
+#### Respuesta 200 OK
+
 ```json
 {
-  "status": "ok",
-  "timestamp": "2026-07-25T10:00:00.000Z",
-  "db_connected": true,
-  "version": "1.0.0"
+  "id": "01923e77-7777-7000-8000-000000000077",
+  "project_id": 1,
+  "status": "delivered",
+  "recipient": "customer@example.com",
+  "subject": "¡Bienvenido!",
+  "from_email": "waitlist@creator.dev",
+  "from_name": "Mi App",
+  "provider_message_id": "resend-msg-abc123",
+  "sent_at": "2026-10-01T15:00:00+00:00",
+  "created_at": "2026-10-01T15:00:00+00:00",
+  "error_message": null,
+  "metadata": {}
 }
 ```
 
-### Resend Webhook Receiver
-`POST /api/v1/webhooks/resend`
+#### Estados posibles
 
-- Header: `Resend-Signature: <hex_signature>`
-- Handled events: `email.sent`, `email.delivered`, `email.bounced`, `email.complained`.
-- Response: `200 OK` `{ "received": true, "matched_log": true }`
+| Estado | Significado |
+|---|---|
+| `queued` | Encolado para envío asíncrono. |
+| `sending` | El worker lo está procesando. |
+| `sent` | Entregado al proveedor. |
+| `delivered` | Confirmado por el servidor de destino (webhook del proveedor). |
+| `bounced` | Rebotó. |
+| `complained` | El destinatario lo marcó como spam. |
+| `failed` | Fallo definitivo o reintentos agotados. |
+| `sandbox` | Capturado en el Buzón Sandbox (no se envió). |
 
-### Background Queue Worker (Cron)
-`GET /api/v1/cron/process-queue`
+`metadata` puede incluir: `cc`, `bcc`, descriptores de `attachments`, `open_count`, `click_count`, `events` (auditoría), y `failover_used` / `failover_provider` / `primary_error`.
 
-- Header: `Authorization: Bearer <CRON_SECRET>`
-- Response: `200 OK`
 ```json
-{
-  "processed": 3,
-  "completed": 2,
-  "failed": 1,
-  "remaining": 0,
-  "items": []
-}
+// 404 NotFound (no existe o pertenece a otro proyecto)
+{ "error": "NotFound", "message": "Email not found or access denied for this project." }
 ```
+
+---
+
+## 4. Health check
+
+### `GET /api/v1/health`
+
+Sin autenticación.
+
+```json
+{ "status": "ok", "version": "v1" }
+```
+
+> Endpoints adicionales de infraestructura: `GET /up` (Laravel health) y `GET /health` (web, comprueba la conexión a base de datos).
+
+---
+
+## 5. Webhook entrante del proveedor
+
+### `POST /api/v1/webhooks/resend`
+
+Endpoint **interno** que recibe los eventos de Resend. Verifica la firma Svix (`svix-id`, `svix-timestamp`, `svix-signature`) con tolerancia de 5 minutos. No debe invocarse desde aplicaciones cliente.
+
+Eventos procesados: `email.sent`, `email.delivered`, `email.bounced` (añade supresión `hard_bounce`), `email.complained` (añade supresión global `spam_complaint`), `email.opened`, `email.clicked`.
+
+```json
+// 401 InvalidSignature
+{ "error": "InvalidSignature", "message": "Webhook signature verification failed." }
+
+// 200 OK
+{ "received": true, "result": { "processed": true, "log_id": "019…", "event_type": "email.delivered", "status": "delivered" } }
+```
+
+---
+
+## 6. Resiliencia del cliente (recomendada)
+
+Aunque la API v1 no aplica un límite fijo de peticiones por minuto, sí aplica **cuota diaria por proyecto** (`429 QuotaExceeded`) y el proveedor puede limitar. Recomendaciones:
+
+1. Envía correos no urgentes con `async: true` (envío en cola).
+2. Ante `429` o `5xx`, aplica backoff exponencial (≥ 60 s).
+3. Persiste el `id` devuelto y consulta el estado con `GET /api/v1/emails/{id}`.
+4. No reintentes errores permanentes (`401`, `404`, `422`).
+5. Verifica la firma de los webhooks antes de confiar en el payload.

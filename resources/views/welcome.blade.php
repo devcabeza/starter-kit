@@ -22,17 +22,17 @@
             <div class="absolute bottom-10 right-0 w-[450px] h-[450px] bg-indigo-500/10 blur-[120px] rounded-full"></div>
         </div>
 
-        <div class="min-h-screen-safe w-full flex flex-col justify-between pt-safe pb-safe">
+        <div class="min-h-screen-safe w-full max-w-full overflow-x-hidden flex flex-col justify-between pb-safe">
             {{-- Top Sticky / Safe Area Protected Header --}}
-            <header class="w-full sticky top-0 z-40 bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-800/60 transition-colors">
+            <header class="w-full sticky top-0 z-40 bg-zinc-950/90 backdrop-blur-xl border-b border-zinc-800/60 transition-colors pt-safe">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
                     {{-- Brand Logo --}}
-                    <a href="{{ route('home') }}" class="flex items-center gap-3 select-none group">
-                        <div class="w-10 h-10 rounded-2xl bg-zinc-900 border border-zinc-800 p-2 flex items-center justify-center group-hover:border-indigo-500/50 transition-colors shadow-sm">
+                    <a href="{{ route('home') }}" class="flex items-center gap-2.5 sm:gap-3 select-none group shrink-0">
+                        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-zinc-900 border border-zinc-800 p-2 flex items-center justify-center group-hover:border-indigo-500/50 transition-colors shadow-sm">
                             <img src="{{ asset('favicon.svg') }}" alt="Laravertex" class="w-full h-full object-contain pointer-events-none">
                         </div>
                         <div class="flex items-center gap-2">
-                            <span class="font-extrabold text-xl tracking-tight text-white group-hover:text-indigo-300 transition-colors">Laravertex</span>
+                            <span class="font-extrabold text-lg sm:text-xl tracking-tight text-white group-hover:text-indigo-300 transition-colors">Laravertex</span>
                             <x-badge variant="neutral" size="xs" class="border border-zinc-800 text-zinc-400 hidden sm:inline-flex">
                                 v1.0
                             </x-badge>
@@ -50,67 +50,201 @@
 
                     {{-- Header CTAs --}}
                     <div class="flex items-center gap-2 sm:gap-3">
-                        <x-button
-                            href="https://github.com/devcabeza/starter-kit"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            variant="ghost"
-                            size="sm"
-                            class="border border-zinc-800 hover:border-zinc-700 text-zinc-300"
-                        >
-                            <svg class="w-4 h-4 fill-current text-white shrink-0" viewBox="0 0 24 24">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-                            </svg>
-                            <span class="hidden sm:inline">GitHub</span>
-                        </x-button>
-
-                        <x-button
-                            href="https://github.com/devcabeza/starter-kit/releases/latest/download/app-debug.apk"
-                            download="Laravertex.apk"
-                            variant="ghost"
-                            size="sm"
-                            class="hidden sm:inline-flex border border-zinc-800 hover:border-zinc-700 text-zinc-300"
-                        >
-                            <svg class="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                            </svg>
-                            <span>APK Móvil</span>
-                        </x-button>
-
                         @auth
-                            <x-button href="{{ route('dashboard') }}" variant="primary" size="sm" class="shadow-md shadow-indigo-600/20">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <x-button href="{{ route('dashboard') }}" variant="primary" size="sm" class="shadow-md shadow-indigo-600/20 min-h-[44px] px-3.5 sm:px-4 text-xs sm:text-sm">
+                                <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
                                 </svg>
                                 <span>Dashboard</span>
                             </x-button>
                         @else
-                            <x-button href="{{ route('auth.login') }}" variant="primary" size="sm" class="shadow-md shadow-indigo-600/20">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <x-button href="{{ route('auth.login') }}" variant="primary" size="sm" class="shadow-md shadow-indigo-600/20 min-h-[44px] px-3.5 sm:px-4 text-xs sm:text-sm">
+                                <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                                 </svg>
-                                <span>Iniciar Sesión</span>
+                                <span class="hidden sm:inline">Iniciar Sesión</span>
+                                <span class="sm:hidden">Entrar</span>
                             </x-button>
                         @endauth
+
+                        {{-- Desktop Only: GitHub --}}
+                        <div class="hidden md:inline-flex">
+                            <x-button
+                                href="https://github.com/devcabeza/starter-kit"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                variant="ghost"
+                                size="sm"
+                                class="border border-zinc-800 hover:border-zinc-700 text-zinc-300 min-h-[44px]"
+                            >
+                                <svg class="w-4 h-4 fill-current text-white shrink-0" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                                </svg>
+                                <span>GitHub</span>
+                            </x-button>
+                        </div>
+
+                        {{-- Desktop Only: APK --}}
+                        <div class="hidden lg:inline-flex">
+                            <x-button
+                                href="https://github.com/devcabeza/starter-kit/releases/latest/download/app-debug.apk"
+                                download="Laravertex.apk"
+                                variant="ghost"
+                                size="sm"
+                                class="border border-zinc-800 hover:border-zinc-700 text-zinc-300"
+                            >
+                                <svg class="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                </svg>
+                                <span>APK Móvil</span>
+                            </x-button>
+                        </div>
+
+                        {{-- Mobile menu trigger (DaisyUI modal / bottom sheet) --}}
+                        <button
+                            type="button"
+                            onclick="document.getElementById('mobile_navigation_modal').showModal()"
+                            class="md:hidden inline-flex items-center justify-center min-h-[44px] min-w-[44px] px-2.5 rounded-xl border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-200 active:scale-95 transition-transform select-none cursor-pointer"
+                            aria-label="Abrir menú de navegación"
+                        >
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                            </svg>
+                        </button>
                     </div>
                 </div>
             </header>
 
+            {{-- Mobile Navigation Modal (DaisyUI Bottom Sheet) --}}
+            <x-modal id="mobile_navigation_modal" title="Menú de Navegación">
+                <nav class="space-y-1 pt-1 select-none">
+                    <a
+                        href="#features"
+                        onclick="document.getElementById('mobile_navigation_modal').close()"
+                        class="flex items-center gap-3 min-h-[48px] px-3.5 rounded-xl text-base font-medium text-zinc-200 hover:text-white active:bg-zinc-800/80 transition-colors"
+                    >
+                        <span class="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                            </svg>
+                        </span>
+                        <span>Ventajas</span>
+                    </a>
+                    <a
+                        href="#architecture"
+                        onclick="document.getElementById('mobile_navigation_modal').close()"
+                        class="flex items-center gap-3 min-h-[48px] px-3.5 rounded-xl text-base font-medium text-zinc-200 hover:text-white active:bg-zinc-800/80 transition-colors"
+                    >
+                        <span class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0l4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0l-5.571 3-5.571-3" />
+                            </svg>
+                        </span>
+                        <span>Arquitectura</span>
+                    </a>
+                    <a
+                        href="#stack"
+                        onclick="document.getElementById('mobile_navigation_modal').close()"
+                        class="flex items-center gap-3 min-h-[48px] px-3.5 rounded-xl text-base font-medium text-zinc-200 hover:text-white active:bg-zinc-800/80 transition-colors"
+                    >
+                        <span class="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" />
+                            </svg>
+                        </span>
+                        <span>Tech Stack</span>
+                    </a>
+                    <a
+                        href="#quickstart"
+                        onclick="document.getElementById('mobile_navigation_modal').close()"
+                        class="flex items-center gap-3 min-h-[48px] px-3.5 rounded-xl text-base font-medium text-zinc-200 hover:text-white active:bg-zinc-800/80 transition-colors"
+                    >
+                        <span class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                            </svg>
+                        </span>
+                        <span>Inicio Rápido</span>
+                    </a>
+                    <a
+                        href="#faq"
+                        onclick="document.getElementById('mobile_navigation_modal').close()"
+                        class="flex items-center gap-3 min-h-[48px] px-3.5 rounded-xl text-base font-medium text-zinc-200 hover:text-white active:bg-zinc-800/80 transition-colors"
+                    >
+                        <span class="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+                            </svg>
+                        </span>
+                        <span>FAQ</span>
+                    </a>
+
+                    <div class="pt-3 mt-3 border-t border-zinc-800/80 flex flex-col gap-2.5">
+                        @auth
+                            <x-button
+                                href="{{ route('dashboard') }}"
+                                variant="primary"
+                                size="md"
+                                class="w-full min-h-[48px] font-semibold text-base shadow-lg shadow-indigo-600/30"
+                            >
+                                Ir al Dashboard
+                            </x-button>
+                        @else
+                            <x-button
+                                href="{{ route('auth.login') }}"
+                                variant="primary"
+                                size="md"
+                                class="w-full min-h-[48px] font-semibold text-base shadow-lg shadow-indigo-600/30"
+                            >
+                                Iniciar Sesión (Magic Link)
+                            </x-button>
+                        @endauth
+
+                        <x-button
+                            href="https://github.com/devcabeza/starter-kit/releases/latest/download/app-debug.apk"
+                            download="Laravertex.apk"
+                            variant="neutral"
+                            size="md"
+                            class="w-full min-h-[48px] border border-zinc-700/80 font-semibold text-base"
+                        >
+                            <svg class="w-5 h-5 text-indigo-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                            </svg>
+                            <span>Descargar APK Móvil</span>
+                        </x-button>
+
+                        <x-button
+                            href="https://github.com/devcabeza/starter-kit"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            variant="neutral"
+                            size="md"
+                            class="w-full min-h-[48px] border border-zinc-700/80 font-semibold text-base"
+                        >
+                            <svg class="w-5 h-5 fill-current text-white shrink-0" viewBox="0 0 24 24">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                            </svg>
+                            <span>Ver Repositorio GitHub</span>
+                        </x-button>
+                    </div>
+                </nav>
+            </x-modal>
+
             {{-- Main Landing Content --}}
             <main class="flex-1 w-full flex flex-col items-center">
                 {{-- 1. HERO SECTION --}}
-                <section class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-20 pb-16 text-center">
-                    <div class="max-w-4xl mx-auto flex flex-col items-center space-y-6">
+                <section class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-20 pb-12 sm:pb-16 text-center">
+                    <div class="max-w-4xl mx-auto flex flex-col items-center space-y-5 sm:space-y-6">
                         {{-- Product Category Badge --}}
-                        <div class="inline-flex items-center gap-2">
-                            <x-badge variant="neutral" size="lg" class="border border-indigo-500/30 bg-indigo-950/40 text-indigo-300 py-1.5 px-4 shadow-inner">
-                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                                <span>Laravel 13 &bull; Livewire 4 &bull; Capacitor 7 &bull; DaisyUI 5</span>
+                        <div class="inline-flex items-center justify-center max-w-full">
+                            <x-badge variant="neutral" size="lg" class="border border-indigo-500/30 bg-indigo-950/40 text-indigo-300 py-1.5 px-3 sm:px-4 shadow-inner max-w-full text-center whitespace-normal h-auto">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+                                <span class="text-xs sm:text-sm">Laravel 13 &bull; Livewire 4 &bull; Capacitor 7 &bull; DaisyUI 5</span>
                             </x-badge>
                         </div>
 
                         {{-- Main H1: Outcome-Driven Headline --}}
-                        <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.1] select-text">
+                        <h1 class="text-3xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.15] sm:leading-[1.1] select-text">
                             Construye tu SaaS en Laravel y lánzalo en
                             <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-300 to-indigo-200">
                                 Web y APK Nativo
@@ -119,12 +253,12 @@
                         </h1>
 
                         {{-- H2 / Subtitle --}}
-                        <p class="text-base sm:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed select-text">
+                        <p class="text-sm sm:text-lg lg:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed select-text">
                             Ahorra semanas de setup y arquitectura. Laravertex combina la solidez de Laravel 13, la reactividad de Livewire 4 y la potencia de Capacitor 7 con Arquitectura Hexagonal y componentes DaisyUI 5 listos para producción.
                         </p>
 
                         {{-- Primary Actions / Thumb Zone --}}
-                        <div class="w-full flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 pt-4 max-w-2xl mx-auto flex-wrap">
+                        <div class="w-full flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 pt-3 sm:pt-4 max-w-2xl mx-auto">
                             @auth
                                 <x-button
                                     href="{{ route('dashboard') }}"
@@ -180,7 +314,7 @@
                         </div>
 
                         {{-- Trust Microcopy & Risk Reversal --}}
-                        <div class="pt-2 text-xs sm:text-sm text-zinc-500 flex items-center justify-center gap-3 sm:gap-6 flex-wrap select-none">
+                        <div class="pt-2 text-xs sm:text-sm text-zinc-500 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 select-none">
                             <span class="inline-flex items-center gap-1.5 text-zinc-400">
                                 <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
@@ -203,19 +337,19 @@
                     </div>
 
                     {{-- Hero Showcase Mockup (Interactive Code / Stack Preview) --}}
-                    <div class="mt-14 max-w-5xl mx-auto">
-                        <div class="relative rounded-3xl bg-zinc-900/90 border border-zinc-800 shadow-2xl overflow-hidden backdrop-blur-xl text-left">
+                    <div class="mt-10 sm:mt-14 max-w-5xl mx-auto w-full">
+                        <div class="relative rounded-2xl sm:rounded-3xl bg-zinc-900/90 border border-zinc-800 shadow-2xl overflow-hidden backdrop-blur-xl text-left">
                             {{-- Window Top Bar --}}
-                            <div class="px-4 sm:px-6 py-3.5 bg-zinc-900 border-b border-zinc-800/80 flex items-center justify-between">
-                                <div class="flex items-center gap-2">
-                                    <span class="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
-                                    <span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
-                                    <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
-                                    <span class="ml-2 text-xs font-mono text-zinc-500">laravertex ~ starter-kit</span>
+                            <div class="px-4 sm:px-6 py-3 bg-zinc-900 border-b border-zinc-800/80 flex items-center justify-between">
+                                <div class="flex items-center gap-2 min-w-0">
+                                    <span class="w-3 h-3 rounded-full bg-rose-500/80 shrink-0"></span>
+                                    <span class="w-3 h-3 rounded-full bg-amber-500/80 shrink-0"></span>
+                                    <span class="w-3 h-3 rounded-full bg-emerald-500/80 shrink-0"></span>
+                                    <span class="ml-2 text-xs font-mono text-zinc-500 truncate">laravertex ~ starter-kit</span>
                                 </div>
-                                <div class="flex items-center gap-2 text-xs font-mono text-zinc-400">
+                                <div class="flex items-center gap-2 text-xs font-mono text-zinc-400 shrink-0">
                                     <x-badge variant="neutral" size="xs" class="border border-emerald-500/30 text-emerald-400 bg-emerald-500/10">
-                                        Pest: 100% Passing
+                                        Pest: 100%
                                     </x-badge>
                                     <x-badge variant="neutral" size="xs" class="border border-indigo-500/30 text-indigo-400 bg-indigo-500/10 hidden sm:inline-flex">
                                         Larastan: Level 8
@@ -224,35 +358,37 @@
                             </div>
 
                             {{-- Code / Architecture Highlights --}}
-                            <div class="p-6 sm:p-8 font-mono text-xs sm:text-sm text-zinc-300 space-y-4 overflow-x-auto select-text">
-                                <div class="flex items-center gap-2 text-zinc-500">
+                            <div class="p-4 sm:p-8 font-mono text-xs sm:text-sm text-zinc-300 space-y-4 select-text">
+                                <div class="flex items-center gap-2 text-zinc-500 text-xs">
                                     <span class="text-indigo-400 font-bold">$</span>
                                     <span class="text-zinc-400"># 1. Clona el proyecto y ejecuta el setup automatizado</span>
                                 </div>
-                                <div class="bg-zinc-950/70 p-4 rounded-xl border border-zinc-800/80 flex items-center justify-between gap-4">
-                                    <code class="text-indigo-300 overflow-x-auto whitespace-nowrap">git clone https://github.com/devcabeza/starter-kit.git mi-app && cd mi-app && composer run setup</code>
+                                <div class="bg-zinc-950/70 p-3 sm:p-4 rounded-xl border border-zinc-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 min-w-0 max-w-full">
+                                    <div class="min-w-0 flex-1 overflow-x-auto py-1">
+                                        <code class="text-indigo-300 whitespace-nowrap block text-xs sm:text-sm">git clone https://github.com/devcabeza/starter-kit.git mi-app && cd mi-app && composer run setup</code>
+                                    </div>
                                     <button
                                         type="button"
                                         onclick="navigator.clipboard.writeText('git clone https://github.com/devcabeza/starter-kit.git mi-app && cd mi-app && composer run setup'); this.innerText='¡Copiado! '; setTimeout(() => this.innerText='Copiar', 2000)"
-                                        class="shrink-0 px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-sans active:scale-95 transition-all select-none cursor-pointer"
+                                        class="shrink-0 self-end sm:self-auto inline-flex items-center justify-center min-h-[44px] min-w-[44px] px-3.5 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-sans active:scale-95 transition-all select-none cursor-pointer"
                                     >
                                         Copiar
                                     </button>
                                 </div>
 
-                                <div class="flex items-center gap-2 text-zinc-500 pt-2">
+                                <div class="flex items-center gap-2 text-zinc-500 text-xs pt-2">
                                     <span class="text-indigo-400 font-bold">$</span>
                                     <span class="text-zinc-400"># 2. Inicia el servidor de desarrollo y compila tu APK nativo</span>
                                 </div>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    <div class="bg-zinc-950/70 p-4 rounded-xl border border-zinc-800/80">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 min-w-0">
+                                    <div class="bg-zinc-950/70 p-3 sm:p-4 rounded-xl border border-zinc-800/80 min-w-0">
                                         <div class="text-zinc-500 text-xs mb-1">Entorno Web Reactivo:</div>
-                                        <code class="text-emerald-400">npm run dev</code>
+                                        <code class="text-emerald-400 block overflow-x-auto whitespace-nowrap text-xs sm:text-sm">npm run dev</code>
                                         <div class="text-xs text-zinc-500 mt-2 font-sans">Livewire 4 + Vite Hot Module Reloading activo en http://localhost:8000</div>
                                     </div>
-                                    <div class="bg-zinc-950/70 p-4 rounded-xl border border-zinc-800/80">
+                                    <div class="bg-zinc-950/70 p-3 sm:p-4 rounded-xl border border-zinc-800/80 min-w-0">
                                         <div class="text-zinc-500 text-xs mb-1">Compilación Android Nativa:</div>
-                                        <code class="text-purple-300">npm run build:android</code>
+                                        <code class="text-purple-300 block overflow-x-auto whitespace-nowrap text-xs sm:text-sm">npm run build:android</code>
                                         <div class="text-xs text-zinc-500 mt-2 font-sans">Capacitor 7 sincroniza vistas y Gradle genera tu app-debug.apk</div>
                                     </div>
                                 </div>
@@ -262,63 +398,63 @@
                 </section>
 
                 {{-- 2. TECH STACK MARQUEE / LOGOS SECTION --}}
-                <section id="stack" class="w-full border-y border-zinc-800/80 bg-zinc-900/30 py-12">
+                <section id="stack" class="w-full border-y border-zinc-800/80 bg-zinc-900/30 py-8 sm:py-12">
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                         <p class="text-xs font-bold text-zinc-500 uppercase tracking-widest select-none">
                             Impulsado por el ecosistema más moderno de Laravel y desarrollo móvil
                         </p>
-                        <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4 items-center justify-center">
-                            <div class="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 flex flex-col items-center justify-center gap-1.5 hover:border-zinc-700 transition-colors">
-                                <span class="font-bold text-white text-sm">Laravel 13</span>
-                                <span class="text-[11px] text-zinc-500">PHP 8.3 / 8.4</span>
+                        <div class="mt-6 sm:mt-8 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5 sm:gap-4 items-center justify-center">
+                            <div class="p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-zinc-900/60 border border-zinc-800/80 flex flex-col items-center justify-center gap-1 hover:border-zinc-700 transition-colors">
+                                <span class="font-bold text-white text-xs sm:text-sm">Laravel 13</span>
+                                <span class="text-[10px] sm:text-[11px] text-zinc-500">PHP 8.3 / 8.4</span>
                             </div>
-                            <div class="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 flex flex-col items-center justify-center gap-1.5 hover:border-zinc-700 transition-colors">
-                                <span class="font-bold text-indigo-300 text-sm">Livewire 4.1</span>
-                                <span class="text-[11px] text-zinc-500">Blaze 1.0</span>
+                            <div class="p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-zinc-900/60 border border-zinc-800/80 flex flex-col items-center justify-center gap-1 hover:border-zinc-700 transition-colors">
+                                <span class="font-bold text-indigo-300 text-xs sm:text-sm">Livewire 4.1</span>
+                                <span class="text-[10px] sm:text-[11px] text-zinc-500">Blaze 1.0</span>
                             </div>
-                            <div class="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 flex flex-col items-center justify-center gap-1.5 hover:border-zinc-700 transition-colors">
-                                <span class="font-bold text-emerald-400 text-sm">Capacitor 7</span>
-                                <span class="text-[11px] text-zinc-500">Android & iOS</span>
+                            <div class="p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-zinc-900/60 border border-zinc-800/80 flex flex-col items-center justify-center gap-1 hover:border-zinc-700 transition-colors">
+                                <span class="font-bold text-emerald-400 text-xs sm:text-sm">Capacitor 7</span>
+                                <span class="text-[10px] sm:text-[11px] text-zinc-500">Android & iOS</span>
                             </div>
-                            <div class="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 flex flex-col items-center justify-center gap-1.5 hover:border-zinc-700 transition-colors">
-                                <span class="font-bold text-purple-300 text-sm">DaisyUI 5</span>
-                                <span class="text-[11px] text-zinc-500">Tailwind CSS v4</span>
+                            <div class="p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-zinc-900/60 border border-zinc-800/80 flex flex-col items-center justify-center gap-1 hover:border-zinc-700 transition-colors">
+                                <span class="font-bold text-purple-300 text-xs sm:text-sm">DaisyUI 5</span>
+                                <span class="text-[10px] sm:text-[11px] text-zinc-500">Tailwind CSS v4</span>
                             </div>
-                            <div class="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 flex flex-col items-center justify-center gap-1.5 hover:border-zinc-700 transition-colors">
-                                <span class="font-bold text-white text-sm">Hexagonal</span>
-                                <span class="text-[11px] text-zinc-500">Clean Code</span>
+                            <div class="p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-zinc-900/60 border border-zinc-800/80 flex flex-col items-center justify-center gap-1 hover:border-zinc-700 transition-colors">
+                                <span class="font-bold text-white text-xs sm:text-sm">Hexagonal</span>
+                                <span class="text-[10px] sm:text-[11px] text-zinc-500">Clean Code</span>
                             </div>
-                            <div class="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 flex flex-col items-center justify-center gap-1.5 hover:border-zinc-700 transition-colors">
-                                <span class="font-bold text-amber-400 text-sm">Pest 5</span>
-                                <span class="text-[11px] text-zinc-500">100% Tests</span>
+                            <div class="p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-zinc-900/60 border border-zinc-800/80 flex flex-col items-center justify-center gap-1 hover:border-zinc-700 transition-colors">
+                                <span class="font-bold text-amber-400 text-xs sm:text-sm">Pest 5</span>
+                                <span class="text-[10px] sm:text-[11px] text-zinc-500">100% Tests</span>
                             </div>
-                            <div class="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 flex flex-col items-center justify-center gap-1.5 hover:border-zinc-700 transition-colors">
-                                <span class="font-bold text-sky-400 text-sm">Docker</span>
-                                <span class="text-[11px] text-zinc-500">Coolify & Cloud</span>
+                            <div class="p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-zinc-900/60 border border-zinc-800/80 flex flex-col items-center justify-center gap-1 hover:border-zinc-700 transition-colors">
+                                <span class="font-bold text-sky-400 text-xs sm:text-sm">Docker</span>
+                                <span class="text-[10px] sm:text-[11px] text-zinc-500">Coolify & Cloud</span>
                             </div>
-                            <div class="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 flex flex-col items-center justify-center gap-1.5 hover:border-zinc-700 transition-colors">
-                                <span class="font-bold text-rose-400 text-sm">Horizon</span>
-                                <span class="text-[11px] text-zinc-500">Redis Queues</span>
+                            <div class="p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-zinc-900/60 border border-zinc-800/80 flex flex-col items-center justify-center gap-1 hover:border-zinc-700 transition-colors">
+                                <span class="font-bold text-rose-400 text-xs sm:text-sm">Horizon</span>
+                                <span class="text-[10px] sm:text-[11px] text-zinc-500">Redis Queues</span>
                             </div>
                         </div>
                     </div>
                 </section>
 
                 {{-- 3. CORE BENEFITS / TRANSFORMATION SECTION --}}
-                <section id="features" class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
-                    <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <section id="features" class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-24">
+                    <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-16 space-y-3 sm:space-y-4">
                         <x-badge variant="neutral" size="md" class="border border-indigo-500/30 text-indigo-300">
                             Ventajas Competitivas
                         </x-badge>
-                        <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight select-text">
+                        <h2 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight select-text">
                             Todo lo que necesitas para construir rápido y escalar en serio
                         </h2>
-                        <p class="text-base sm:text-lg text-zinc-400 select-text">
+                        <p class="text-sm sm:text-base md:text-lg text-zinc-400 select-text">
                             Deja atrás los kits superficiales. Laravertex está pensado para resolver los problemas reales de distribución móvil, desacoplamiento de arquitectura y estabilidad en producción.
                         </p>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8">
                         {{-- Benefit 1: Mobile APK --}}
                         <x-card class="bg-zinc-900/60 border-zinc-800 hover:border-indigo-500/50 p-2">
                             <div class="space-y-4">
@@ -418,21 +554,21 @@
                 </section>
 
                 {{-- 4. BENTO GRID ARCHITECTURE SHOWCASE (UI/UX 2026 TRENDS) --}}
-                <section id="architecture" class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 border-t border-zinc-800/80">
-                    <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <section id="architecture" class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-24 border-t border-zinc-800/80">
+                    <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-16 space-y-3 sm:space-y-4">
                         <x-badge variant="neutral" size="md" class="border border-indigo-500/30 text-indigo-300">
                             Estructura de Alto Calibre
                         </x-badge>
-                        <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight select-text">
+                        <h2 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight select-text">
                             Ingeniería limpia diseñada para crecer
                         </h2>
-                        <p class="text-base sm:text-lg text-zinc-400 select-text">
+                        <p class="text-sm sm:text-base md:text-lg text-zinc-400 select-text">
                             Explora cómo cada capa de Laravertex colabora para entregarte una experiencia de desarrollo fluida y altamente desacoplada.
                         </p>
                     </div>
 
                     {{-- Bento Grid Layout --}}
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-6">
                         {{-- Bento 1: Hexagonal Flow (Spans 8 cols) --}}
                         <div class="col-span-1 md:col-span-2 lg:col-span-8">
                             <x-card class="h-full bg-zinc-900/70 border-zinc-800 hover:border-indigo-500/50 p-2 flex flex-col justify-between">
@@ -551,64 +687,64 @@
                 </section>
 
                 {{-- 5. QUICKSTART / HOW IT WORKS IN 3 STEPS --}}
-                <section id="quickstart" class="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-                    <div class="text-center mb-16 space-y-4">
+                <section id="quickstart" class="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
+                    <div class="text-center mb-10 sm:mb-16 space-y-3 sm:space-y-4">
                         <x-badge variant="neutral" size="md" class="border border-indigo-500/30 text-indigo-300">
                             Puesta en Marcha
                         </x-badge>
-                        <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight select-text">
+                        <h2 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight select-text">
                             Listo para crear en 3 sencillos pasos
                         </h2>
-                        <p class="text-base sm:text-lg text-zinc-400 select-text">
+                        <p class="text-sm sm:text-base md:text-lg text-zinc-400 select-text">
                             De cero a un entorno full-stack funcionando en menos de 3 minutos.
                         </p>
                     </div>
 
-                    <div class="space-y-6">
+                    <div class="space-y-4 sm:space-y-6">
                         {{-- Step 1 --}}
-                        <div class="p-6 sm:p-8 rounded-3xl bg-zinc-900/60 border border-zinc-800 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div class="p-4 sm:p-8 rounded-2xl sm:rounded-3xl bg-zinc-900/60 border border-zinc-800 flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 min-w-0 max-w-full">
                             <div class="flex items-start gap-4">
                                 <div class="w-10 h-10 rounded-2xl bg-indigo-600 text-white font-bold flex items-center justify-center shrink-0">
                                     1
                                 </div>
                                 <div class="space-y-1 select-text">
-                                    <h3 class="text-lg font-bold text-white">Clona el repositorio</h3>
-                                    <p class="text-sm text-zinc-400">Descarga el código en tu máquina local o servidor.</p>
+                                    <h3 class="text-base sm:text-lg font-bold text-white">Clona el repositorio</h3>
+                                    <p class="text-xs sm:text-sm text-zinc-400">Descarga el código en tu máquina local o servidor.</p>
                                 </div>
                             </div>
-                            <div class="bg-zinc-950 px-4 py-3 rounded-xl border border-zinc-800/80 font-mono text-xs text-indigo-300 select-all overflow-x-auto">
+                            <div class="w-full md:w-auto max-w-full min-w-0 bg-zinc-950 px-4 py-3 rounded-xl border border-zinc-800/80 font-mono text-xs text-indigo-300 select-all overflow-x-auto whitespace-nowrap block">
                                 git clone https://github.com/devcabeza/starter-kit.git mi-saas
                             </div>
                         </div>
 
                         {{-- Step 2 --}}
-                        <div class="p-6 sm:p-8 rounded-3xl bg-zinc-900/60 border border-zinc-800 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div class="p-4 sm:p-8 rounded-2xl sm:rounded-3xl bg-zinc-900/60 border border-zinc-800 flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 min-w-0 max-w-full">
                             <div class="flex items-start gap-4">
                                 <div class="w-10 h-10 rounded-2xl bg-indigo-600 text-white font-bold flex items-center justify-center shrink-0">
                                     2
                                 </div>
                                 <div class="space-y-1 select-text">
-                                    <h3 class="text-lg font-bold text-white">Ejecuta el asistente de setup</h3>
-                                    <p class="text-sm text-zinc-400">Instala dependencias, genera claves, migra BD SQLite y compila assets.</p>
+                                    <h3 class="text-base sm:text-lg font-bold text-white">Ejecuta el asistente de setup</h3>
+                                    <p class="text-xs sm:text-sm text-zinc-400">Instala dependencias, genera claves, migra BD SQLite y compila assets.</p>
                                 </div>
                             </div>
-                            <div class="bg-zinc-950 px-4 py-3 rounded-xl border border-zinc-800/80 font-mono text-xs text-emerald-400 select-all overflow-x-auto">
+                            <div class="w-full md:w-auto max-w-full min-w-0 bg-zinc-950 px-4 py-3 rounded-xl border border-zinc-800/80 font-mono text-xs text-emerald-400 select-all overflow-x-auto whitespace-nowrap block">
                                 cd mi-saas && composer run setup
                             </div>
                         </div>
 
                         {{-- Step 3 --}}
-                        <div class="p-6 sm:p-8 rounded-3xl bg-zinc-900/60 border border-zinc-800 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div class="p-4 sm:p-8 rounded-2xl sm:rounded-3xl bg-zinc-900/60 border border-zinc-800 flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 min-w-0 max-w-full">
                             <div class="flex items-start gap-4">
                                 <div class="w-10 h-10 rounded-2xl bg-indigo-600 text-white font-bold flex items-center justify-center shrink-0">
                                     3
                                 </div>
                                 <div class="space-y-1 select-text">
-                                    <h3 class="text-lg font-bold text-white">Inicia el servidor y compila</h3>
-                                    <p class="text-sm text-zinc-400">Arranca el servidor local o genera tu APK móvil nativo con Capacitor.</p>
+                                    <h3 class="text-base sm:text-lg font-bold text-white">Inicia el servidor y compila</h3>
+                                    <p class="text-xs sm:text-sm text-zinc-400">Arranca el servidor local o genera tu APK móvil nativo con Capacitor.</p>
                                 </div>
                             </div>
-                            <div class="bg-zinc-950 px-4 py-3 rounded-xl border border-zinc-800/80 font-mono text-xs text-purple-300 select-all overflow-x-auto">
+                            <div class="w-full md:w-auto max-w-full min-w-0 bg-zinc-950 px-4 py-3 rounded-xl border border-zinc-800/80 font-mono text-xs text-purple-300 select-all overflow-x-auto whitespace-nowrap block">
                                 npm run dev &bull; npm run build:android
                             </div>
                         </div>
@@ -616,20 +752,20 @@
                 </section>
 
                 {{-- 6. OBJECTION HANDLING / FAQ SECTION --}}
-                <section id="faq" class="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-zinc-800/80">
-                    <div class="text-center mb-16 space-y-4">
+                <section id="faq" class="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 border-t border-zinc-800/80">
+                    <div class="text-center mb-10 sm:mb-16 space-y-3 sm:space-y-4">
                         <x-badge variant="neutral" size="md" class="border border-indigo-500/30 text-indigo-300">
                             Preguntas Frecuentes
                         </x-badge>
-                        <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight select-text">
+                        <h2 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight select-text">
                             Resolvemos todas tus dudas
                         </h2>
-                        <p class="text-base sm:text-lg text-zinc-400 select-text">
+                        <p class="text-sm sm:text-base md:text-lg text-zinc-400 select-text">
                             Todo lo que necesitas saber antes de empezar a programar con Laravertex.
                         </p>
                     </div>
 
-                    <div class="space-y-4">
+                    <div class="space-y-3 sm:space-y-4">
                         <x-collapse title="¿Por qué elegir Laravertex en lugar de Laravel Breeze o Jetstream?" :open="true">
                             Breeze y Jetstream son excelentes para autenticación inicial simple, pero están limitados a la web tradicional y carecen de arquitectura desacoplada. Laravertex es un ecosistema completo: incluye soporte móvil nativo con Capacitor 7 (generando APKs Android reales), Arquitectura Hexagonal que previene deuda técnica, colas asíncronas con Laravel Horizon ya configuradas, componentes DaisyUI 5 encapsulados en Blade y recetas de despliegue para Docker y Coolify.
                         </x-collapse>
@@ -653,25 +789,25 @@
                 </section>
 
                 {{-- 7. FINAL HIGH-URGENCY CTA SECTION --}}
-                <section class="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-                    <div class="relative rounded-3xl overflow-hidden bg-gradient-to-b from-zinc-900 via-zinc-900 to-zinc-950 border border-indigo-500/30 p-8 sm:p-16 text-center shadow-2xl">
+                <section class="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-24">
+                    <div class="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-gradient-to-b from-zinc-900 via-zinc-900 to-zinc-950 border border-indigo-500/30 p-5 sm:p-12 md:p-16 text-center shadow-2xl">
                         {{-- Subtle background glow inside banner --}}
-                        <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-indigo-500/20 blur-[100px] rounded-full pointer-events-none"></div>
+                        <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-72 sm:w-96 h-72 sm:h-96 bg-indigo-500/20 blur-[100px] rounded-full pointer-events-none"></div>
 
-                        <div class="relative z-10 max-w-3xl mx-auto space-y-6">
+                        <div class="relative z-10 max-w-3xl mx-auto space-y-4 sm:space-y-6">
                             <x-badge variant="neutral" size="md" class="border border-indigo-400/30 text-indigo-300 bg-indigo-950/60">
                                 Despliega hoy mismo
                             </x-badge>
 
-                            <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight select-text">
+                            <h2 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight select-text">
                                 Deja de perder días en configuración. Enfócate en tu producto.
                             </h2>
 
-                            <p class="text-base sm:text-lg text-zinc-300 max-w-xl mx-auto leading-relaxed select-text">
+                            <p class="text-sm sm:text-base md:text-lg text-zinc-300 max-w-xl mx-auto leading-relaxed select-text">
                                 Miles de líneas de configuración, pruebas y arquitectura listas para ser clonadas. Lanza tu SaaS web y móvil hoy.
                             </p>
 
-                            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 max-w-xl mx-auto w-full flex-wrap">
+                            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 pt-2 sm:pt-4 max-w-xl mx-auto w-full">
                                 @auth
                                     <x-button
                                         href="{{ route('dashboard') }}"
@@ -697,7 +833,7 @@
                                     download="Laravertex.apk"
                                     variant="neutral"
                                     size="lg"
-                                    class="w-full sm:w-auto min-h-[48px] px-6 border border-zinc-700/80 font-semibold text-base"
+                                    class="w-full sm:w-auto min-h-[48px] px-6 border border-zinc-700/80 hover:border-zinc-500 font-semibold text-base shadow-sm"
                                 >
                                     Descargar APK Móvil
                                 </x-button>
@@ -726,7 +862,7 @@
             </main>
 
             {{-- Safe-Area Compliant Footer --}}
-            <footer class="w-full border-t border-zinc-800/80 bg-zinc-950 py-10 px-4 sm:px-6 lg:px-8 select-none">
+            <footer class="w-full border-t border-zinc-800/80 bg-zinc-950 py-8 sm:py-10 px-4 sm:px-6 lg:px-8 pb-safe select-none">
                 <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
                     <div class="flex items-center gap-2">
                         <img src="{{ asset('favicon.svg') }}" alt="Laravertex" class="w-6 h-6">
@@ -735,12 +871,12 @@
                         <span class="text-xs text-zinc-500">&copy; {{ date('Y') }} MIT License</span>
                     </div>
 
-                    <div class="flex items-center gap-6 text-xs text-zinc-400">
-                        <a href="#features" class="hover:text-zinc-200 transition-colors">Ventajas</a>
-                        <a href="#architecture" class="hover:text-zinc-200 transition-colors">Arquitectura</a>
-                        <a href="#stack" class="hover:text-zinc-200 transition-colors">Stack</a>
-                        <a href="#faq" class="hover:text-zinc-200 transition-colors">FAQ</a>
-                        <a href="https://github.com/devcabeza/starter-kit" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-400 transition-colors font-medium">GitHub</a>
+                    <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-xs text-zinc-400">
+                        <a href="#features" class="inline-flex items-center min-h-[44px] px-1 hover:text-zinc-200 transition-colors">Ventajas</a>
+                        <a href="#architecture" class="inline-flex items-center min-h-[44px] px-1 hover:text-zinc-200 transition-colors">Arquitectura</a>
+                        <a href="#stack" class="inline-flex items-center min-h-[44px] px-1 hover:text-zinc-200 transition-colors">Stack</a>
+                        <a href="#faq" class="inline-flex items-center min-h-[44px] px-1 hover:text-zinc-200 transition-colors">FAQ</a>
+                        <a href="https://github.com/devcabeza/starter-kit" target="_blank" rel="noopener noreferrer" class="inline-flex items-center min-h-[44px] px-1 hover:text-indigo-400 transition-colors font-medium">GitHub</a>
                     </div>
                 </div>
             </footer>

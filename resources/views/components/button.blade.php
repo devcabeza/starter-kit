@@ -9,7 +9,7 @@
 ])
 
 @php
-$baseClasses = 'btn active:scale-95 transition-all select-none duration-150 inline-flex items-center justify-center gap-2 cursor-pointer font-medium';
+$baseClasses = 'btn active:scale-95 transition-all select-none duration-150 font-medium';
 
 $variantClasses = match ($variant) {
     'primary' => 'btn-primary',

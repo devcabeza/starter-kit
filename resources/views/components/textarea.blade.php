@@ -9,7 +9,7 @@
 ])
 
 @php
-$textareaClasses = 'textarea w-full transition-colors focus:outline-none';
+$textareaClasses = 'textarea w-full text-base min-h-[44px] transition-colors focus:outline-none';
 $borderClass = $bordered ? 'textarea-bordered' : '';
 
 $viewErrors = $errors ?? view()->shared('errors') ?? new \Illuminate\Support\ViewErrorBag();
