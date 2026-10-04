@@ -19,7 +19,7 @@ $compactClass = $compact ? 'card-compact' : '';
         </figure>
     @endif
 
-    <div class="card-body p-6 space-y-4">
+    <div class="card-body p-4 sm:p-6 space-y-4">
         @if ($title || isset($header))
             @if (isset($header))
                 {{ $header }}

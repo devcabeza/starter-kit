@@ -12,33 +12,6 @@ services:
       - "host.docker.internal:host-gateway"
     volumes:
       - .:/var/www/html
-    environment:
-      APP_NAME: ${APP_NAME:-laravertex}
-      APP_URL: ${APP_URL:-http://localhost:8000}
-      VITE_DEV_SERVER_URL: ${VITE_DEV_SERVER_URL:-http://localhost:5173}
-      DB_CONNECTION: ${DB_CONNECTION:-pgsql}
-      DB_HOST: ${DB_HOST:-postgres}
-      DB_PORT: ${DB_PORT:-5432}
-      DB_DATABASE: ${DB_DATABASE:-laravertex_db}
-      DB_USERNAME: ${DB_USERNAME:-root}
-      DB_PASSWORD: ${DB_PASSWORD:-root}
-      # Redis
-      REDIS_HOST: ${REDIS_HOST:-redis}
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-null}
-      REDIS_PORT: ${REDIS_PORT:-6379}
-      CACHE_DRIVER: ${CACHE_DRIVER:-redis}
-      CACHE_PREFIX: ${CACHE_PREFIX:-laravertex-cache}
-      SESSION_DRIVER: ${SESSION_DRIVER:-redis}
-      SESSION_CONNECTION: ${SESSION_CONNECTION:-default}
-      SESSION_LIFETIME: ${SESSION_LIFETIME:-120}
-      QUEUE_CONNECTION: ${QUEUE_CONNECTION:-redis}
-      # Mailer
-      MAIL_MAILER: ${MAIL_MAILER:-smtp}
-      MAIL_HOST: ${MAIL_HOST:-mailpit}
-      MAIL_PORT: ${MAIL_PORT:-1025}
-      MAIL_USERNAME: ${MAIL_USERNAME:-null}
-      MAIL_PASSWORD: ${MAIL_PASSWORD:-null}
-      MAIL_ENCRYPTION: ${MAIL_ENCRYPTION:-null}
     command: bash -c "php artisan serve --host=0.0.0.0 --port=8000 & npm run dev -- --host"
     depends_on:
       postgres:
@@ -52,22 +25,6 @@ services:
       dockerfile: ./docker/Dockerfile
     volumes:
       - .:/var/www/html
-    environment:
-      APP_NAME: ${APP_NAME:-laravertex}
-      APP_URL: ${APP_URL:-http://localhost:8000}
-      DB_CONNECTION: ${DB_CONNECTION:-pgsql}
-      DB_HOST: ${DB_HOST:-postgres}
-      DB_PORT: ${DB_PORT:-5432}
-      DB_DATABASE: ${DB_DATABASE:-laravertex_db}
-      DB_USERNAME: ${DB_USERNAME:-root}
-      DB_PASSWORD: ${DB_PASSWORD:-root}
-      REDIS_HOST: ${REDIS_HOST:-redis}
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-null}
-      REDIS_PORT: ${REDIS_PORT:-6379}
-      QUEUE_CONNECTION: ${QUEUE_CONNECTION:-redis}
-      MAIL_MAILER: ${MAIL_MAILER:-smtp}
-      MAIL_HOST: ${MAIL_HOST:-mailpit}
-      MAIL_PORT: ${MAIL_PORT:-1025}
     command: php artisan horizon
     depends_on:
       - app
@@ -78,22 +35,6 @@ services:
       dockerfile: ./docker/Dockerfile
     volumes:
       - .:/var/www/html
-    environment:
-      APP_NAME: ${APP_NAME:-laravertex}
-      APP_URL: ${APP_URL:-http://localhost:8000}
-      DB_CONNECTION: ${DB_CONNECTION:-pgsql}
-      DB_HOST: ${DB_HOST:-postgres}
-      DB_PORT: ${DB_PORT:-5432}
-      DB_DATABASE: ${DB_DATABASE:-laravertex_db}
-      DB_USERNAME: ${DB_USERNAME:-root}
-      DB_PASSWORD: ${DB_PASSWORD:-root}
-      REDIS_HOST: ${REDIS_HOST:-redis}
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-null}
-      REDIS_PORT: ${REDIS_PORT:-6379}
-      QUEUE_CONNECTION: ${QUEUE_CONNECTION:-redis}
-      MAIL_MAILER: ${MAIL_MAILER:-smtp}
-      MAIL_HOST: ${MAIL_HOST:-mailpit}
-      MAIL_PORT: ${MAIL_PORT:-1025}
     command: php artisan schedule:work
     depends_on:
       - app
@@ -101,15 +42,15 @@ services:
   postgres:
     image: postgres:17-alpine
     ports:
-      - "${FORWARD_DB_PORT:-54322}:54322"
+      - "5433:5432"
     environment:
-      POSTGRES_DB: ${DB_DATABASE:-laravertex_db}
-      POSTGRES_USER: ${DB_USERNAME:-root}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-root}
+      POSTGRES_DB: laravertex_db
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
     volumes:
       - laravertex_postgres:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-q", "-d", "${DB_DATABASE:-laravertex_db}", "-U", "${DB_USERNAME:-root}"]
+      test: ["CMD", "pg_isready", "-q", "-d", "laravertex_db", "-U", "root"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -117,7 +58,7 @@ services:
   redis:
     image: redis:alpine
     ports:
-      - "${FORWARD_REDIS_PORT:-63799}:63799"
+      - "6380:6379"
     volumes:
       - laravertex_redis:/data
     healthcheck:
@@ -129,8 +70,8 @@ services:
   mailpit:
     image: axllent/mailpit:latest
     ports:
-      - "${FORWARD_MAIL_PORT:-10255}:10255"
-      - "${FORWARD_MAIL_DASHBOARD_PORT:-80255}:80255"
+      - "1026:1025"
+      - "8026:8025"
 
 volumes:
   laravertex_postgres:

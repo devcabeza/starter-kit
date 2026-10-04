@@ -28,7 +28,7 @@ $positionClass = match ($position) {
         {{ $trigger }}
     </div>
 
-    <ul tabindex="0" class="dropdown-content menu bg-zinc-900/95 backdrop-blur-xl border border-zinc-800/90 text-zinc-200 rounded-2xl z-50 p-2 shadow-2xl space-y-1 {{ $width }} {{ $menuClasses }}">
+    <ul tabindex="0" class="dropdown-content menu bg-zinc-900/95 backdrop-blur-xl border border-zinc-800/90 text-zinc-200 rounded-2xl z-50 p-2 shadow-2xl space-y-1 max-w-[calc(100vw-1rem)] {{ $width }} {{ $menuClasses }}">
         {{ $slot }}
     </ul>
 </div>

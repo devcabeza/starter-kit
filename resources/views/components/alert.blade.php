@@ -54,7 +54,7 @@ $typeClasses = match ($type) {
         <button
             type="button"
             @click="show = false"
-            class="btn btn-ghost btn-xs btn-circle text-zinc-400 hover:text-white"
+            class="btn btn-ghost btn-sm btn-circle min-h-[44px] min-w-[44px] text-zinc-400 hover:text-white active:scale-95"
             aria-label="Cerrar alerta"
         >
             ✕

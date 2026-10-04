@@ -11,7 +11,7 @@
 ])
 
 @php
-$selectClasses = 'select w-full min-h-[44px] transition-colors focus:outline-none';
+$selectClasses = 'select w-full text-base min-h-[44px] transition-colors focus:outline-none';
 
 $sizeClasses = match ($size) {
     'xs' => 'select-xs min-h-[36px]',

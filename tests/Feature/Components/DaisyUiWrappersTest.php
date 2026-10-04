@@ -259,7 +259,7 @@ test('bottom-nav component renders fixed container with safe area inset', functi
     $html = Blade::render('<x-bottom-nav><button>Inicio</button></x-bottom-nav>');
 
     expect($html)
-        ->toContain('btm-nav')
+        ->toContain('dock')
         ->toContain('fixed bottom-0')
         ->toContain('Inicio');
 });
