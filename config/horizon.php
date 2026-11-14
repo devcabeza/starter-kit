@@ -87,6 +87,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Allowed Emails for Horizon Dashboard
+    |--------------------------------------------------------------------------
+    |
+    | Comma-separated list or array of emails authorized to view Horizon
+    | in production and other non-local environments.
+    |
+    */
+
+    'allowed_emails' => env('HORIZON_ALLOWED_EMAILS')
+        ? array_filter(array_map('trim', explode(',', (string) env('HORIZON_ALLOWED_EMAILS'))))
+        : [],
+
+    /*
+    |--------------------------------------------------------------------------
     | Queue Wait Time Thresholds
     |--------------------------------------------------------------------------
     |

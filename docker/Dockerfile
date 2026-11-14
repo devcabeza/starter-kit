@@ -26,3 +26,8 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 WORKDIR /var/www/html
+
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT ["entrypoint.sh"]

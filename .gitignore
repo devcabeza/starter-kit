@@ -4,6 +4,7 @@
 /public/fonts-manifest.dev.json
 /public/hot
 /public/storage
+/public/vendor
 /storage/*.key
 /storage/pail
 /vendor
@@ -22,7 +23,6 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
-/.agents
 /.amp
 /.claude
 /.cursor
@@ -33,7 +33,6 @@ yarn-error.log
 /.pi
 /.mcp.json
 /skills-lock.json
-/AGENTS.md
 /CLAUDE.md
 /boost.json
 /opencode.json

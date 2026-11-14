@@ -20,7 +20,9 @@ test('authenticated user can view dashboard and see their info', function () {
         ->assertOk()
         ->assertSee('¡Hola, Alejandro Cabeza!')
         ->assertSee('alejandro@example.com')
-        ->assertSee('Cerrar Sesión');
+        ->assertSee('Perfil')
+        ->assertSee('Configuraciones')
+        ->assertSee('Cerrar sesión');
 });
 
 test('authenticated user can log out via post request', function () {

@@ -1,0 +1,15 @@
+#!/bin/sh
+# Pre-commit hook: verify formatting and static analysis before commit
+set -e
+
+echo "🔍 Running pre-commit checks..."
+
+# 1. Laravel Pint style check
+echo "👉 Checking PHP code style with Pint..."
+./vendor/bin/pint --test --dirty
+
+# 2. PHPStan static analysis
+echo "👉 Running PHPStan static analysis..."
+./vendor/bin/phpstan analyse --no-progress
+
+echo "✅ All pre-commit checks passed successfully!"

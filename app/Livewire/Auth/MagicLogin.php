@@ -26,8 +26,15 @@ class MagicLogin extends Component
     ])]
     public string $email = '';
 
+    public string $honeypot = '';
+
     public function submit(SendMagicLinkAction $sendMagicLinkAction, Request $request): mixed
     {
+        if ($this->honeypot !== '') {
+            // Silently discard automated bot submissions
+            return $this->redirectRoute('home', navigate: true);
+        }
+
         $this->validate();
 
         $throttleKey = 'magic-link:'.strtolower(trim($this->email)).'|'.$request->ip();

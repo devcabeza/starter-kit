@@ -23,9 +23,9 @@ return [
     ],
 
     'sendrix' => [
-        'base_url' => env('SENDRIX_BASE_URL'),
-        'api_key' => env('SENDRIX_API_KEY'),
-        'project_id' => env('SENDRIX_PROJECT_ID'),
+        'key' => env('SENDRIX_KEY', env('SENDRIX_API_KEY')),
+        'api_key' => env('SENDRIX_KEY', env('SENDRIX_API_KEY')),
+        'base_url' => env('SENDRIX_BASE_URL', 'https://sendrix.alejandrocabeza.dev'),
     ],
 
     'ses' => [

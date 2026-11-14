@@ -22,6 +22,19 @@ if [ -n "$APP_URL" ]; then
     fi
 fi
 
+# Check if container role is worker/horizon via environment variable (Coolify Dockerfile support)
+if [ "$CONTAINER_ROLE" = "worker" ] || [ "$CONTAINER_ROLE" = "horizon" ]; then
+    echo "⚡ Worker role detected via CONTAINER_ROLE: $CONTAINER_ROLE"
+    echo "🚀 Starting Horizon as PID 1..."
+    exec php artisan horizon
+fi
+
+if [ -n "$CUSTOM_COMMAND" ]; then
+    echo "⚡ Custom command detected via CUSTOM_COMMAND: $CUSTOM_COMMAND"
+    echo "🚀 Starting process as PID 1..."
+    exec $CUSTOM_COMMAND
+fi
+
 # Check if a custom command was passed (e.g. php artisan horizon)
 if [ $# -gt 0 ] && [ "$1" != "nginx" ]; then
     echo "⚡ Custom command detected: $@"
@@ -40,6 +53,9 @@ php artisan event:cache --no-interaction
 
 # Ensure storage link exists
 php artisan storage:link --force 2>/dev/null || true
+
+# Ensure Livewire static assets exist
+php artisan livewire:publish --assets --no-interaction 2>/dev/null || true
 
 # Set proper permissions
 chown -R app:app /var/www/html/storage /var/www/html/bootstrap/cache 2>/dev/null || true

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mail;
 
 use Illuminate\Support\Facades\Http;
@@ -13,9 +15,8 @@ use Symfony\Component\Mime\RawMessage;
 class SendrixTransport implements TransportInterface
 {
     public function __construct(
-        private readonly string $apiKey,
-        private readonly string $projectId,
-        private readonly string $baseUrl,
+        private readonly string $key,
+        private readonly string $baseUrl = 'https://sendrix.alejandrocabeza.dev',
     ) {}
 
     public function send(RawMessage $message, ?Envelope $envelope = null): ?SentMessage
@@ -26,42 +27,51 @@ class SendrixTransport implements TransportInterface
 
         $html = $email->getHtmlBody() ?? $email->getTextBody() ?? '';
 
-        $to = collect($email->getTo())
-            ->map(fn (Address $address) => $address->getAddress())
-            ->values()
-            ->all();
-
-        $cc = collect($email->getCc())
-            ->map(fn (Address $address) => $address->getAddress())
-            ->values()
-            ->all();
-
-        $bcc = collect($email->getBcc())
-            ->map(fn (Address $address) => $address->getAddress())
-            ->values()
-            ->all();
-
-        $from = $email->getFrom();
-        $replyTo = $email->getReplyTo();
+        $toAddresses = array_map(fn (Address $address) => $address->getAddress(), $email->getTo());
+        $ccAddresses = array_map(fn (Address $address) => $address->getAddress(), $email->getCc());
+        $bccAddresses = array_map(fn (Address $address) => $address->getAddress(), $email->getBcc());
 
         $payload = [
-            'to' => $to,
+            'to' => $toAddresses[0] ?? '',
             'subject' => $email->getSubject() ?? '',
             'html' => $html,
-            'from_name' => $from !== [] ? $from[0]->getName() : null,
-            'reply_to' => $replyTo !== [] ? $replyTo[0]->getAddress() : null,
-            'cc' => $cc,
-            'bcc' => $bcc,
         ];
 
-        $response = Http::withHeaders([
-            'Authorization' => "Bearer {$this->apiKey}",
-            'X-Project-ID' => $this->projectId,
-            'Content-Type' => 'application/json',
-        ])->timeout(10)->post("{$this->baseUrl}/api/v1/send", $payload);
+        $from = $email->getFrom();
+        if ($from === []) {
+            $fromAddress = (string) (config('mail.from.address') ?? 'hello@example.com');
+            $fromName = (string) (config('mail.from.name') ?? '');
+            $email->from(new Address($fromAddress, $fromName));
+            $from = $email->getFrom();
+        }
+
+        if (! empty($from[0]->getName())) {
+            $payload['from_name'] = $from[0]->getName();
+        }
+
+        $replyTo = $email->getReplyTo();
+        if ($replyTo !== []) {
+            $payload['reply_to'] = $replyTo[0]->getAddress();
+        }
+
+        if ($ccAddresses !== []) {
+            $payload['cc'] = $ccAddresses;
+        }
+
+        if ($bccAddresses !== []) {
+            $payload['bcc'] = $bccAddresses;
+        }
+
+        $url = rtrim($this->baseUrl, '/').'/api/v1/send';
+
+        $response = Http::withToken($this->key)
+            ->asJson()
+            ->acceptJson()
+            ->timeout(10)
+            ->post($url, $payload);
 
         if ($response->failed()) {
-            $error = $response->json('error', $response->body());
+            $error = $response->json('error') ?? $response->json('message') ?? $response->body();
             throw new \RuntimeException("Sendrix error: {$error}", $response->status());
         }
 
@@ -70,7 +80,16 @@ class SendrixTransport implements TransportInterface
             recipients: $email->getTo(),
         );
 
-        return new SentMessage($message, $sentEnvelope);
+        $sentMessage = new SentMessage($message, $sentEnvelope);
+
+        if ($response->successful()) {
+            $sendrixMessageId = $response->json('id');
+            if (! empty($sendrixMessageId)) {
+                $sentMessage->setMessageId((string) $sendrixMessageId);
+            }
+        }
+
+        return $sentMessage;
     }
 
     public function __toString(): string
