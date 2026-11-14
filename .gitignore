@@ -33,7 +33,6 @@ yarn-error.log
 /.pi
 /.mcp.json
 /skills-lock.json
-/AGENTS.md
 /CLAUDE.md
 /boost.json
 /opencode.json
