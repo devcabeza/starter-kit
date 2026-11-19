@@ -42,3 +42,6 @@ yarn-error.log
 /android/
 /ios/
 /dist/
+/odd
+# Local AI runtime state
+.atl/
