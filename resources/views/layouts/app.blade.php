@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full scroll-smooth">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ $title ?? 'Laravertex' }}</title>
@@ -15,9 +15,9 @@
         <!-- Styles & Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="h-full bg-zinc-950 text-zinc-100 antialiased font-sans selection:bg-indigo-500 selection:text-white touch-callout-none">
-        <div class="min-h-screen-safe flex flex-col justify-between">
-            <main class="flex-1 flex flex-col">
+    <body class="h-full w-full max-w-full overflow-x-hidden bg-zinc-950 text-zinc-100 antialiased font-sans selection:bg-indigo-500 selection:text-white touch-callout-none">
+        <div class="min-h-screen-safe w-full max-w-full overflow-x-hidden flex flex-col justify-between">
+            <main class="flex-1 flex flex-col w-full max-w-full overflow-x-hidden">
                 {{ $slot ?? '' }}
                 @yield('content')
             </main>

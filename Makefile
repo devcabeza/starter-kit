@@ -16,6 +16,7 @@
 .PHONY: make-model make-controller make-livewire make-migration make-seeder make-factory
 .PHONY: filament install update
 .PHONY: telescope telescope-clear telescope-install telescope-publish telescope-link
+.PHONY: git-hooks
 
 # ============================================================================
 # Docker/Sail Commands
@@ -34,43 +35,28 @@ help: ## Show this help message
 	@echo "Available commands:"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-25s\033[0m %s\n", $$1, $$2}'
 
+git-hooks: ## Configure git core.hooksPath to use project .githooks
+	@chmod +x .githooks/* 2>/dev/null || true
+	@git config core.hooksPath .githooks
+	@echo "\033[32mGit hooks configured successfully to .githooks\033[0m"
+
 # ----------------------------------------------------------------------------
 # Docker
 # ----------------------------------------------------------------------------
 up: ## Start Docker containers
-	@if [ -f "./vendor/bin/sail" ]; then \
-		./vendor/bin/sail up -d; \
-	else \
-		docker compose up -d; \
-	fi
+	docker compose up -d
 
 down: ## Stop Docker containers
-	@if [ -f "./vendor/bin/sail" ]; then \
-		./vendor/bin/sail down; \
-	else \
-		docker compose down; \
-	fi
+	docker compose down
 
 restart: ## Restart Docker containers
-	@if [ -f "./vendor/bin/sail" ]; then \
-		./vendor/bin/sail restart; \
-	else \
-		docker compose restart; \
-	fi
+	docker compose restart
 
 status: ## Show Docker container status
-	@if [ -f "./vendor/bin/sail" ]; then \
-		./vendor/bin/sail ps; \
-	else \
-		docker compose ps; \
-	fi
+	docker compose ps
 
 logs: ## Show Docker container logs (tail)
-	@if [ -f "./vendor/bin/sail" ]; then \
-		./vendor/bin/sail logs -f; \
-	else \
-		docker compose logs -f; \
-	fi
+	docker compose logs -f
 
 # ============================================================================
 # ARTISAN
