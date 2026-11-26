@@ -67,4 +67,4 @@ New feature flow: domain model/exception → application action + DTO → outbou
 
 - The Laravel, Livewire, Tailwind, testing, Horizon, background-processing, and Telescope skills were folded into the sections above and removed; do not recreate them from generic templates. Remaining repo skills live in `.agents/skills/` and are indexed in `.atl/skill-registry.md`.
 - Conditional skills: `sendrix` for email changes; `erp-module-standard` before adding a dashboard module (it assumes `organization_id`/`TenantContextInterface`, which this starter kit does not have yet); `landing-page-architect` + `elite-copywriter` for landing/marketing pages; `infer-conventions` only when the user explicitly asks to record conventions.
-- CI: `.github/workflows/tests.yml` (PRs to `main`) and `.github/workflows/build-mobile.yml` (tags/merged PRs).
+- CI: `.github/workflows/tests.yml` (PRs to `main`) and `.github/workflows/build-mobile.yml` (push to `main`/`staging` and `v*.*.*` tags). Mobile binaries are published to Cloudflare R2, not GitHub Releases, so downloads stay public on a private repo.

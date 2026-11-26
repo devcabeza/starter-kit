@@ -91,7 +91,7 @@
                         {{-- Desktop Only: APK --}}
                         <div class="hidden lg:inline-flex">
                             <x-button
-                                href="https://github.com/devcabeza/starter-kit/releases/latest/download/app-debug.apk"
+                                href="{{ config('mobile.apk_url') }}"
                                 download="Laravertex.apk"
                                 variant="ghost"
                                 size="sm"
@@ -217,7 +217,7 @@
                         @endauth
 
                         <x-button
-                            href="https://github.com/devcabeza/starter-kit/releases/latest/download/app-debug.apk"
+                            href="{{ config('mobile.apk_url') }}"
                             download="Laravertex.apk"
                             variant="neutral"
                             size="md"
@@ -302,7 +302,7 @@
                             @endauth
 
                             <x-button
-                                href="https://github.com/devcabeza/starter-kit/releases/latest/download/app-debug.apk"
+                                href="{{ config('mobile.apk_url') }}"
                                 download="Laravertex.apk"
                                 variant="neutral"
                                 size="lg"
@@ -880,7 +880,7 @@
                                 @endauth
 
                                 <x-button
-                                    href="https://github.com/devcabeza/starter-kit/releases/latest/download/app-debug.apk"
+                                    href="{{ config('mobile.apk_url') }}"
                                     download="Laravertex.apk"
                                     variant="neutral"
                                     size="lg"

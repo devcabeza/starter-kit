@@ -102,7 +102,7 @@
 
                 <x-slot:actions class="w-full">
                     <x-button
-                        href="https://github.com/devcabeza/starter-kit/releases/latest/download/app-debug.apk"
+                        href="{{ config('mobile.apk_url') }}"
                         variant="neutral"
                         class="w-full min-h-[48px] bg-zinc-800 hover:bg-zinc-700 text-white"
                         download="Laravertex.apk"
