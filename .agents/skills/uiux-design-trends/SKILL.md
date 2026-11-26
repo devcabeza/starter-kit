@@ -338,10 +338,7 @@ class BentoCard extends Component
 
 ## Related Skills
 
-- **laravel-best-practices:** Backend patterns
-- **livewire-development:** Livewire-specific patterns
-- **tailwindcss-development:** Tailwind utilities
-- **testing-best-practices:** Test UI components
+- **AGENTS.md:** project-wide Laravel, Livewire, Tailwind, and testing rules
 
 ---
 

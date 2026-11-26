@@ -44,39 +44,19 @@ git-hooks: ## Configure git core.hooksPath to use project .githooks
 # Docker
 # ----------------------------------------------------------------------------
 up: ## Start Docker containers
-	@if [ -f "./vendor/bin/sail" ]; then \
-		./vendor/bin/sail up -d; \
-	else \
-		docker compose up -d; \
-	fi
+	docker compose up -d
 
 down: ## Stop Docker containers
-	@if [ -f "./vendor/bin/sail" ]; then \
-		./vendor/bin/sail down; \
-	else \
-		docker compose down; \
-	fi
+	docker compose down
 
 restart: ## Restart Docker containers
-	@if [ -f "./vendor/bin/sail" ]; then \
-		./vendor/bin/sail restart; \
-	else \
-		docker compose restart; \
-	fi
+	docker compose restart
 
 status: ## Show Docker container status
-	@if [ -f "./vendor/bin/sail" ]; then \
-		./vendor/bin/sail ps; \
-	else \
-		docker compose ps; \
-	fi
+	docker compose ps
 
 logs: ## Show Docker container logs (tail)
-	@if [ -f "./vendor/bin/sail" ]; then \
-		./vendor/bin/sail logs -f; \
-	else \
-		docker compose logs -f; \
-	fi
+	docker compose logs -f
 
 # ============================================================================
 # ARTISAN
